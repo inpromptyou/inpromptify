@@ -176,11 +176,12 @@ export default function HomePage() {
                 Start free. Scale when you&apos;re ready.
               </p>
             </div>
-            <div className="grid sm:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden max-w-3xl mx-auto">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.04] rounded-xl overflow-hidden max-w-4xl mx-auto">
               {[
                 { plan: "Free", price: "$0", period: "/mo", desc: "3 tests/month. Perfect for trying it out.", cta: "Get Started", highlight: false },
-                { plan: "Pro", price: "$79", period: "/mo", desc: "Unlimited tests. Full analytics. Team features.", cta: "Start Free Trial", highlight: true },
-                { plan: "Enterprise", price: "Custom", period: "", desc: "SSO, custom models, dedicated support.", cta: "Contact Sales", highlight: false },
+                { plan: "Plus", price: "$14.99", period: "/mo", desc: "15 tests/month. Ideal for freelancers.", cta: "Get Started", highlight: false },
+                { plan: "Pro", price: "$79", period: "/mo", desc: "100 tests/month. Full analytics. Teams.", cta: "Start Free Trial", highlight: true },
+                { plan: "Business", price: "$249", period: "/mo", desc: "500 tests/month. ATS integrations. API.", cta: "Start Free Trial", highlight: false },
               ].map((p) => (
                 <div key={p.plan} className={`p-6 ${p.highlight ? "bg-indigo-600/[0.06] border-y border-indigo-500/20 sm:border-y-0 sm:border-x" : "bg-[#0C1120]"}`}>
                   <h3 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">{p.plan}</h3>

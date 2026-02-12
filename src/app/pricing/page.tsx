@@ -13,8 +13,22 @@ const plans = [
     features: [
       "3 tests per month",
       "Basic scoring metrics",
-      "GPT-4o only",
+      "Claude Haiku only",
       "Public candidate profile",
+    ],
+    cta: "Get Started",
+    highlight: false,
+  },
+  {
+    name: "Plus",
+    monthlyPrice: 14.99,
+    description: "For individuals and freelancers",
+    features: [
+      "15 tests per month",
+      "Claude Haiku + Sonnet",
+      "Detailed score breakdowns",
+      "Shareable PromptScore card",
+      "Email support",
     ],
     cta: "Get Started",
     highlight: false,
@@ -29,17 +43,17 @@ const plans = [
       "Analytics dashboard",
       "Custom branding",
       "CSV export",
-      "Email support",
+      "Priority email support",
     ],
     cta: "Start Free Trial",
-    highlight: false,
+    highlight: true,
   },
   {
     name: "Business",
     monthlyPrice: 249,
     description: "For teams with volume hiring",
     features: [
-      "Unlimited tests",
+      "500 tests per month",
       "Up to 10 seats",
       "ATS integrations",
       "Custom scoring rubrics",
@@ -47,14 +61,14 @@ const plans = [
       "Priority support",
     ],
     cta: "Start Free Trial",
-    highlight: true,
+    highlight: false,
   },
   {
     name: "Enterprise",
     monthlyPrice: 799,
     description: "For organizations with specific needs",
     features: [
-      "Everything in Business",
+      "2,000 tests per month",
       "Unlimited seats",
       "SSO / SAML",
       "White-label option",
@@ -71,8 +85,8 @@ export default function PricingPage() {
 
   const getPrice = (monthlyPrice: number) => {
     if (monthlyPrice === 0) return "$0";
-    if (annual) return `$${Math.round(monthlyPrice * 0.8)}`;
-    return `$${monthlyPrice}`;
+    if (annual) return `$${(Math.round(monthlyPrice * 0.8 * 100) / 100).toFixed(monthlyPrice % 1 ? 2 : 0)}`;
+    return `$${monthlyPrice % 1 ? monthlyPrice.toFixed(2) : monthlyPrice}`;
   };
 
   return (
@@ -104,7 +118,7 @@ export default function PricingPage() {
           </div>
 
           {/* Plans Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-5">
             {plans.map((plan) => (
               <div
                 key={plan.name}
@@ -152,7 +166,7 @@ export default function PricingPage() {
                 { q: "What counts as a 'test'?", a: "A single candidate taking a single assessment. If three candidates take the same test, that's three tests toward your monthly limit." },
                 { q: "Can I switch plans?", a: "Yes, upgrade or downgrade anytime. Upgrades are prorated. Downgrades take effect at the next billing cycle." },
                 { q: "Do you offer education discounts?", a: "50% off Pro and Business for verified educational institutions. Email us with your .edu address." },
-                { q: "Which AI models are supported?", a: "Free plans include GPT-4o. Paid plans unlock Claude and Gemini. Enterprise customers can bring their own model endpoints." },
+                { q: "Which AI models are supported?", a: "Free and Plus plans include Claude Haiku and Sonnet. Pro and above unlock all models including GPT-4o and Gemini. Enterprise customers can bring their own model endpoints." },
                 { q: "Is candidate data secure?", a: "All data encrypted at rest and in transit. SOC 2 Type II compliant. GDPR ready. Enterprise plans offer data residency options." },
               ].map((faq) => (
                 <div key={faq.q} className="border-b border-gray-200 pb-5">
