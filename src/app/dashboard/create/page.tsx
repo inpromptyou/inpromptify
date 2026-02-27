@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ds } from "@/lib/designSystem";
+import { ROLE_PACKS } from "@/lib/rolePacks";
 
 interface CustomCriterion {
   id: string;
@@ -35,15 +36,7 @@ interface FormState {
 }
 
 const TEMPLATES = [
-  { id: "email", label: "Email Writing", desc: "Professional emails, outreach, newsletters" },
-  { id: "code", label: "Code Generation", desc: "Debug, generate, or refactor code" },
-  { id: "data", label: "Data Analysis", desc: "SQL, pipelines, data insights" },
-  { id: "creative", label: "Creative Writing", desc: "Blog posts, ad copy, storytelling" },
-  { id: "legal", label: "Legal Drafting", desc: "Contracts, compliance, legal docs" },
-  { id: "support", label: "Customer Support", desc: "Help desk, ticket responses" },
-  { id: "research", label: "Research Summary", desc: "Literature reviews, reports" },
-  { id: "translation", label: "Translation", desc: "Localization, multilingual" },
-  { id: "technical", label: "Technical Writing", desc: "Docs, manuals, specs" },
+  ...ROLE_PACKS.map(p => ({ id: p.id, label: p.label, desc: p.desc })),
   { id: "custom", label: "Custom (Blank)", desc: "Start from scratch" },
 ];
 
@@ -135,38 +128,28 @@ export default function CreateTestPage() {
     }
   }, [aiDescription]);
 
-  const handleTemplateSelect = async (templateId: string) => {
+  const handleTemplateSelect = (templateId: string) => {
     if (templateId === "custom") { setShowTemplates(false); return; }
-    const template = TEMPLATES.find((t) => t.id === templateId);
-    if (template) {
-      setAiDescription(`${template.label}: ${template.desc}`);
+    const pack = ROLE_PACKS.find((p) => p.id === templateId);
+    if (pack) {
       setShowTemplates(false);
-      setAiLoading(true);
-      try {
-        const res = await fetch("/api/tests/ai-suggest", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ description: `${template.label}: ${template.desc}` }),
-        });
-        const data = await res.json();
-        if (res.ok) {
-          const s = data.suggestion;
-          setForm((prev) => ({
-            ...prev, title: s.title || prev.title, taskPrompt: s.taskPrompt || prev.taskPrompt,
-            expectedOutcomes: s.expectedOutcomes || prev.expectedOutcomes,
-            timeLimitMinutes: s.timeLimitMinutes || prev.timeLimitMinutes,
-            maxAttempts: s.maxAttempts || prev.maxAttempts, difficulty: s.difficulty || prev.difficulty,
-            model: s.suggestedModel || prev.model, scoringWeights: s.scoringWeights || prev.scoringWeights,
-            customCriteria: (s.customCriteria || []).map((c: Partial<CustomCriterion>, i: number) => ({
-              id: `tpl-${i}`, name: c.name || `Criterion ${i + 1}`, description: c.description || "",
-              type: c.type || "rubric", weight: c.weight || 25, config: c.config || {},
-            })),
-            description: `${template.label}: ${template.desc}`, testType: templateId,
-          }));
-          setAiSuggested(true);
-        }
-      } catch { /* ignore */ }
-      setAiLoading(false);
+      setAiDescription(pack.description);
+      setForm((prev) => ({
+        ...prev,
+        title: pack.title,
+        description: pack.description,
+        taskPrompt: pack.taskPrompt,
+        expectedOutcomes: pack.expectedOutcomes,
+        difficulty: pack.difficulty,
+        timeLimitMinutes: pack.timeLimitMinutes,
+        maxAttempts: pack.maxAttempts,
+        tokenBudget: pack.tokenBudget,
+        model: pack.model,
+        testType: pack.testType,
+        scoringWeights: pack.scoringWeights,
+        customCriteria: pack.customCriteria,
+      }));
+      setAiSuggested(true);
     }
   };
 

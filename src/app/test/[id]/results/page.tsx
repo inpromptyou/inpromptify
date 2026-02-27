@@ -224,7 +224,132 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
       <div className="max-w-3xl mx-auto px-5 py-8">
         {activeTab === "overview" && (
           <div className="space-y-6">
+            {/* Hire/No-Hire Recommendation Band */}
+            {(() => {
+              const s = result.promptScore;
+              const band = s >= 80
+                ? { label: "Strong Hire", color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20", desc: "Candidate demonstrates advanced AI proficiency. Efficient, structured, and adaptive prompting." }
+                : s >= 65
+                ? { label: "Hire", color: "text-blue-400 bg-blue-500/10 border-blue-500/20", desc: "Candidate meets proficiency requirements. Solid fundamentals with room for growth." }
+                : s >= 50
+                ? { label: "Consider with Training", color: "text-amber-400 bg-amber-500/10 border-amber-500/20", desc: "Candidate shows potential but needs development in AI tool usage." }
+                : { label: "Not Recommended", color: "text-red-400 bg-red-500/10 border-red-500/20", desc: "Candidate needs significant AI training before being effective." };
+              return (
+                <div className={`rounded-lg border p-4 ${band.color}`}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[11px] font-semibold uppercase tracking-wider">Recommendation</span>
+                      <h3 className="text-lg font-bold mt-0.5">{band.label}</h3>
+                    </div>
+                    <span className="text-3xl font-bold">{result.promptScore}</span>
+                  </div>
+                  <p className="text-[13px] mt-1 opacity-80">{band.desc}</p>
+                </div>
+              );
+            })()}
+
             <ScoreCard result={result} testName={testName} />
+
+            {/* Scoring Audit Trail */}
+            <div>
+              <h2 className="text-sm font-semibold text-white mb-3">Scoring Breakdown</h2>
+              <p className="text-[12px] text-gray-500 mb-4">Detailed analysis of each scoring dimension. This is exactly how your score was calculated.</p>
+              <div className="space-y-3">
+                {([
+                  { key: "promptQuality" as const, label: "Prompt Quality", weight: "30%" },
+                  { key: "responseQuality" as const, label: "Response Quality", weight: "25%" },
+                  { key: "efficiency" as const, label: "Efficiency", weight: "15%" },
+                  { key: "speed" as const, label: "Speed", weight: "15%" },
+                  { key: "iterationIQ" as const, label: "Iteration IQ", weight: "15%" },
+                ]).map((dim) => {
+                  const d = result.dimensions[dim.key];
+                  if (!d) return null;
+                  const scoreColor = d.score >= 80 ? "text-emerald-400" : d.score >= 60 ? "text-amber-400" : d.score >= 40 ? "text-orange-400" : "text-red-400";
+                  return (
+                    <details key={dim.key} className="bg-[#0C1120] border border-white/[0.06] rounded-lg group">
+                      <summary className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-white/[0.02] transition-colors list-none">
+                        <div className="flex items-center gap-3">
+                          <span className={`text-lg font-bold ${scoreColor} w-10`}>{d.score}</span>
+                          <div>
+                            <span className="text-[13px] font-medium text-white">{dim.label}</span>
+                            <span className="text-[11px] text-gray-600 ml-2">{dim.weight}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-24 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full transition-all duration-700 ${d.score >= 80 ? "bg-emerald-500" : d.score >= 60 ? "bg-amber-500" : d.score >= 40 ? "bg-orange-500" : "bg-red-500"}`} style={{ width: `${d.score}%` }} />
+                          </div>
+                          <svg className="w-4 h-4 text-gray-600 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                        </div>
+                      </summary>
+                      <div className="px-4 pb-4 pt-1 border-t border-white/[0.04] space-y-3">
+                        {d.strengths.length > 0 && (
+                          <div>
+                            <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">Strengths</span>
+                            <ul className="mt-1 space-y-0.5">
+                              {d.strengths.map((s, i) => (
+                                <li key={i} className="text-[12px] text-gray-400 flex items-start gap-2">
+                                  <svg className="w-3 h-3 mt-0.5 text-emerald-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                                  {s}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {d.weaknesses.length > 0 && (
+                          <div>
+                            <span className="text-[10px] font-semibold text-red-400 uppercase tracking-wider">Areas for Improvement</span>
+                            <ul className="mt-1 space-y-0.5">
+                              {d.weaknesses.map((w, i) => (
+                                <li key={i} className="text-[12px] text-gray-400 flex items-start gap-2">
+                                  <svg className="w-3 h-3 mt-0.5 text-red-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                                  {w}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {d.suggestions.length > 0 && (
+                          <div>
+                            <span className="text-[10px] font-semibold text-indigo-400 uppercase tracking-wider">Suggestions</span>
+                            <ul className="mt-1 space-y-0.5">
+                              {d.suggestions.map((s, i) => (
+                                <li key={i} className="text-[12px] text-gray-400 flex items-start gap-2">
+                                  <span className="text-indigo-400 shrink-0">-</span>
+                                  {s}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {d.strengths.length === 0 && d.weaknesses.length === 0 && d.suggestions.length === 0 && (
+                          <p className="text-[12px] text-gray-600">No detailed breakdown available for this dimension.</p>
+                        )}
+                      </div>
+                    </details>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Custom Criteria Results */}
+            {result.customCriteriaResults && result.customCriteriaResults.length > 0 && (
+              <div>
+                <h2 className="text-sm font-semibold text-white mb-3">Custom Criteria</h2>
+                <div className="space-y-2">
+                  {result.customCriteriaResults.map((c, i) => (
+                    <div key={i} className="bg-[#0C1120] border border-white/[0.06] rounded-lg px-4 py-3 flex items-center justify-between">
+                      <div>
+                        <span className="text-[13px] font-medium text-white">{c.name}</span>
+                        <span className="text-[11px] text-gray-600 ml-2 capitalize">{c.type}</span>
+                        <p className="text-[11px] text-gray-500 mt-0.5">{c.details}</p>
+                      </div>
+                      <span className={`text-lg font-bold ${c.score >= 80 ? "text-emerald-400" : c.score >= 60 ? "text-amber-400" : c.score >= 40 ? "text-orange-400" : "text-red-400"}`}>{c.score}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

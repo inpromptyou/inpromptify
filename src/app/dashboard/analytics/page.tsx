@@ -58,7 +58,7 @@ export default function AnalyticsPage() {
   if (!data || data.summary.totalAttempts === 0) {
     return (
       <div className="p-8">
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Team Analytics</h1>
+        <h1 className="text-xl font-bold text-white mb-2">Team Analytics</h1>
         <p className="text-sm text-gray-500 mb-6">No assessment data yet. Create a test and invite your team to get started.</p>
         <a href="/dashboard/create" className="text-sm text-indigo-600 font-medium hover:text-indigo-700">Create your first assessment</a>
       </div>
@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
   return (
     <div className="p-6 md:p-8 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-xl font-bold text-gray-900 mb-1">Team Analytics</h1>
+        <h1 className="text-xl font-bold text-white mb-1">Team Analytics</h1>
         <p className="text-sm text-gray-500">AI prompting performance across your organization.</p>
       </div>
 
@@ -88,9 +88,9 @@ export default function AnalyticsPage() {
           { label: "Total Assessments", value: summary.totalAttempts, suffix: "" },
           { label: "Est. Annual Savings", value: `$${summary.estimatedAnnualSavings.toLocaleString()}`, suffix: "", highlight: true },
         ].map((card) => (
-          <div key={card.label} className={`bg-white rounded-lg border ${card.highlight ? "border-indigo-200 bg-indigo-50/30" : "border-gray-200"} p-4`}>
+          <div key={card.label} className={`bg-[#0C1120] rounded-lg border ${card.highlight ? "border-indigo-500/20 bg-indigo-500/10" : "border-white/[0.06]"} p-4`}>
             <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">{card.label}</div>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-bold text-white">
               {typeof card.value === "number" ? card.value : card.value}
               {card.suffix && <span className="text-sm text-gray-400 font-normal">{card.suffix}</span>}
             </div>
@@ -100,8 +100,8 @@ export default function AnalyticsPage() {
 
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
         {/* Score Distribution */}
-        <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <h2 className="text-sm font-semibold text-gray-900 mb-4">Score Distribution</h2>
+        <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-5">
+          <h2 className="text-sm font-semibold text-white mb-4">Score Distribution</h2>
           <div className="space-y-2.5">
             {allBuckets.map((bucket) => {
               const count = distMap[bucket] || 0;
@@ -121,8 +121,8 @@ export default function AnalyticsPage() {
 
         {/* Quick Insights */}
         <div className="space-y-4">
-          <div className="bg-white rounded-lg border border-gray-200 p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Top Performers</h2>
+          <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-5">
+            <h2 className="text-sm font-semibold text-white mb-3">Top Performers</h2>
             {topPerformers.length === 0 ? (
               <p className="text-sm text-gray-400">No one scoring 80+ yet.</p>
             ) : (
@@ -130,7 +130,7 @@ export default function AnalyticsPage() {
                 {topPerformers.slice(0, 5).map((p) => (
                   <div key={p.email} className="flex items-center justify-between">
                     <div>
-                      <span className="text-sm text-gray-900 font-medium">{p.name}</span>
+                      <span className="text-sm text-white font-medium">{p.name}</span>
                       <span className="text-[11px] text-gray-400 ml-2">{p.tests_taken} tests</span>
                     </div>
                     <span className="text-sm font-semibold text-indigo-600">{p.avg_score}</span>
@@ -139,8 +139,8 @@ export default function AnalyticsPage() {
               </div>
             )}
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Needs Training</h2>
+          <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-5">
+            <h2 className="text-sm font-semibold text-white mb-3">Needs Training</h2>
             {needsTraining.length === 0 ? (
               <p className="text-sm text-gray-400">Everyone is scoring above 50.</p>
             ) : (
@@ -148,7 +148,7 @@ export default function AnalyticsPage() {
                 {needsTraining.slice(0, 5).map((p) => (
                   <div key={p.email} className="flex items-center justify-between">
                     <div>
-                      <span className="text-sm text-gray-900 font-medium">{p.name}</span>
+                      <span className="text-sm text-white font-medium">{p.name}</span>
                       <span className="text-[11px] text-gray-400 ml-2">{p.tests_taken} tests</span>
                     </div>
                     <span className="text-sm font-semibold text-red-500">{p.avg_score}</span>
@@ -161,14 +161,14 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Full People Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-sm font-semibold text-gray-900">All Team Members</h2>
+      <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] overflow-hidden">
+        <div className="px-5 py-4 border-b border-white/[0.04]">
+          <h2 className="text-sm font-semibold text-white">All Team Members</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100">
+              <tr className="border-b border-white/[0.04]">
                 <th className="text-left text-[10px] text-gray-400 uppercase tracking-wider px-5 py-2.5">Name</th>
                 <th className="text-left text-[10px] text-gray-400 uppercase tracking-wider px-5 py-2.5">Avg Score</th>
                 <th className="text-left text-[10px] text-gray-400 uppercase tracking-wider px-5 py-2.5">Tests</th>
@@ -179,9 +179,9 @@ export default function AnalyticsPage() {
             </thead>
             <tbody>
               {people.map((p) => (
-                <tr key={p.email} className="border-b border-gray-50 hover:bg-gray-50/50">
+                <tr key={p.email} className="border-b border-gray-50 hover:bg-white/[0.02]/50">
                   <td className="px-5 py-3">
-                    <div className="text-[13px] font-medium text-gray-900">{p.name}</div>
+                    <div className="text-[13px] font-medium text-white">{p.name}</div>
                     <div className="text-[11px] text-gray-400">{p.email}</div>
                   </td>
                   <td className="px-5 py-3"><ScoreBar score={p.avg_score} /></td>

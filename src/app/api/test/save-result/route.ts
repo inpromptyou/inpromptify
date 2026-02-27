@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSql } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { sendResultsEmail } from "@/lib/email";
 
 /**
  * POST /api/test/save-result
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     const email = candidateEmail || (session?.user?.email) || "anonymous@test.com";
 
     // Verify test exists
-    const [test] = await sql`SELECT id, user_id FROM tests WHERE id = ${Number(testId)}`;
+    const [test] = await sql`SELECT id, user_id, title FROM tests WHERE id = ${Number(testId)}`;
     if (!test) {
       return NextResponse.json({ error: "Test not found" }, { status: 404 });
     }
@@ -124,6 +125,14 @@ export async function POST(request: NextRequest) {
         WHERE id = ${Number(userId)}
       `;
     }
+
+    // Notify test owner via email (fire and forget)
+    try {
+      const [owner] = await sql`SELECT name, email FROM users WHERE id = ${Number(test.user_id)}`;
+      if (owner?.email) {
+        sendResultsEmail(owner.email, owner.name || "there", name, test.title || `Test #${testId}`, score).catch(() => {});
+      }
+    } catch { /* ignore email errors */ }
 
     return NextResponse.json({
       success: true,

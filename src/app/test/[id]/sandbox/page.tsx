@@ -106,7 +106,7 @@ export default function TestSandboxPage({
 
   // Timer
   useEffect(() => {
-    if (sandboxState !== "active" && sandboxState !== "ready") return;
+    if (sandboxState !== "active") return;
     if (!test) return;
     const timer = setInterval(() => {
       setTimeLeft((t) => {
@@ -285,12 +285,76 @@ export default function TestSandboxPage({
     );
   }
 
+  const startTest = () => {
+    setSandboxState("active");
+  };
+
   const modelLabel = test.model === "gpt-4o" ? "GPT-4o" : test.model === "claude" ? "Claude" : test.model === "gemini" ? "Gemini" : test.model;
   const timeWarning = timeLeft < 120;
   const timeCritical = timeLeft < 30;
   const tokensWarning = tokensUsed > test.token_budget * 0.8;
   const attemptsWarning = attempts >= test.max_attempts - 1;
   const isDisabled = attempts >= test.max_attempts || timeLeft === 0 || sandboxState === "submitting" || sandboxState === "submitted";
+
+  if (sandboxState === "ready") {
+    return (
+      <div className="min-h-screen bg-[#0A0F1C] flex items-center justify-center p-6">
+        <div className="max-w-2xl w-full">
+          <div className="text-center mb-8">
+            <Link href="/" className="font-mono text-sm text-white inline-block mb-6">
+              <span className="text-indigo-500 opacity-60">[</span>IF<span className="text-indigo-500 opacity-60">]</span>
+            </Link>
+            <h1 className="text-2xl font-bold text-white mb-2">{test.title}</h1>
+            <p className="text-sm text-gray-500">{test.description || test.task_prompt.slice(0, 120) + "..."}</p>
+          </div>
+
+          <div className="bg-[#0C1120] border border-white/[0.06] rounded-xl p-6 mb-6">
+            <h2 className="text-sm font-semibold text-white mb-4">How You Are Scored</h2>
+            <p className="text-[13px] text-gray-500 mb-5">Your performance is measured across 5 dimensions, producing a composite PromptScore (0-100).</p>
+            <div className="space-y-3">
+              {[
+                { name: "Prompt Quality", weight: "30%", desc: "Clarity, specificity, structure, and constraints in your prompts." },
+                { name: "Efficiency", weight: "15%", desc: "Fewer attempts and less token usage means higher efficiency." },
+                { name: "Speed", weight: "15%", desc: "Completing the task well within the time limit." },
+                { name: "Response Quality", weight: "25%", desc: "How well the AI output matches the task requirements." },
+                { name: "Iteration IQ", weight: "15%", desc: "How effectively you refine and improve between attempts." },
+              ].map((d) => (
+                <div key={d.name} className="flex items-start gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                  <span className="text-[12px] font-mono text-indigo-400 shrink-0 w-10 text-right">{d.weight}</span>
+                  <div>
+                    <span className="text-[13px] font-medium text-white">{d.name}</span>
+                    <p className="text-[12px] text-gray-500 mt-0.5">{d.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-[#0C1120] border border-white/[0.06] rounded-xl p-5 mb-6">
+            <div className="flex items-center justify-between text-[13px]">
+              <div className="flex items-center gap-4">
+                <span className="text-gray-400">Time Limit: <span className="text-white font-medium">{test.time_limit_minutes} min</span></span>
+                <span className="text-gray-400">Attempts: <span className="text-white font-medium">{test.max_attempts}</span></span>
+                <span className="text-gray-400">Token Budget: <span className="text-white font-medium">{test.token_budget.toLocaleString()}</span></span>
+              </div>
+              <span className="text-gray-500">{modelLabel}</span>
+            </div>
+          </div>
+
+          <div className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 mb-8 text-[12px] text-gray-500 leading-relaxed">
+            <strong className="text-gray-400">Tips:</strong> Write clear, specific prompts with context, constraints, and formatting instructions. Quality over quantity — fewer well-crafted prompts score higher than many vague ones. Each iteration should meaningfully build on the previous response.
+          </div>
+
+          <div className="text-center">
+            <button onClick={startTest} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-lg text-sm font-semibold transition-colors">
+              Start Assessment
+            </button>
+            <p className="text-[11px] text-gray-600 mt-3">Timer begins when you click start.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col bg-[#0A0F1C]">

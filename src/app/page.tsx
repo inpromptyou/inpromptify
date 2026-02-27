@@ -5,6 +5,7 @@ import HeroMockup from "@/components/home/HeroMockup";
 import ScorePreview from "@/components/home/ScorePreview";
 import DashboardPreview from "@/components/home/DashboardPreview";
 import BeforeAfter from "@/components/home/BeforeAfter";
+import UsageCounter from "@/components/home/UsageCounter";
 
 export default function HomePage() {
   return (
@@ -51,7 +52,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-sm text-gray-400">Now in early access</span>
+                <UsageCounter />
               </div>
               <span className="hidden sm:block h-4 w-px bg-white/[0.06]" />
               <span className="text-sm text-gray-500">Free team assessments for the first 100 companies</span>

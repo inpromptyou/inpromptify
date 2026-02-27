@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getSql } from "@/lib/db";
+import { sendInviteEmail } from "@/lib/email";
 import crypto from "crypto";
 
 /**
@@ -41,7 +42,10 @@ export async function POST(request: NextRequest) {
           INSERT INTO invite_links (test_id, token, created_by, candidate_email)
           VALUES (${Number(testId)}, ${token}, ${Number(userId)}, ${email})
         `;
+        const inviteUrl = `https://inpromptify.com/test/invite/${token}`;
         invites.push({ token, email, url: `/test/invite/${token}` });
+        // Send email notification (fire and forget)
+        sendInviteEmail(email, email.split("@")[0], test.title, inviteUrl).catch(() => {});
       }
     } else {
       // Create anonymous invite links
