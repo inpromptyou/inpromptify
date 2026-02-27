@@ -56,9 +56,9 @@ export default function SignupPage() {
             </h2>
             <div className="space-y-5">
               {[
-                { stat: "41%", text: "of enterprise AI spend is wasted on inefficient prompting" },
-                { stat: "3.2x", text: "average token overuse per employee" },
-                { stat: "90 days", text: "to reduce AI spend by 34% with InpromptiFy" },
+                { stat: "10x", text: "variation in prompt effectiveness between employees doing the same task" },
+                { stat: "30%", text: "of GenAI projects abandoned after proof of concept (Gartner)" },
+                { stat: "5 min", text: "to assess your entire team's AI prompting skills" },
               ].map((item) => (
                 <div key={item.stat} className="flex items-start gap-4">
                   <span className="text-xl font-bold text-indigo-400 shrink-0 w-16">{item.stat}</span>
@@ -68,9 +68,9 @@ export default function SignupPage() {
             </div>
             <div className="mt-8 pt-8 border-t border-white/[0.04]">
               <p className="text-[13px] text-gray-600 italic">
-                &ldquo;We had no idea how much we were overspending on AI until InpromptiFy showed us the data.&rdquo;
+                &ldquo;Prompt quality varies by an order of magnitude between users. Organizations need a way to measure and close this gap.&rdquo;
               </p>
-              <p className="text-[12px] text-gray-700 mt-2">-- Head of Engineering, Series B startup</p>
+              <p className="text-[12px] text-gray-700 mt-2">-- Harvard Business School research on GenAI productivity</p>
             </div>
           </div>
         </div>

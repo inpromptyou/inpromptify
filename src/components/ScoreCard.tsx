@@ -42,7 +42,7 @@ function CircularProgress({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#f3f4f6"
+          stroke="rgba(255,255,255,0.06)"
           strokeWidth={strokeWidth}
         />
         {/* Progress circle */}
@@ -117,14 +117,14 @@ function DimensionBar({
     <div>
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-900">{label}</span>
+          <span className="text-sm font-medium text-white">{label}</span>
           <span className="text-[10px] text-gray-400">
             {Math.round(dimension.weight * 100)}% weight
           </span>
         </div>
-        <span className="text-sm font-bold text-gray-900">{dimension.score}</span>
+        <span className="text-sm font-bold text-white">{dimension.score}</span>
       </div>
-      <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+      <div className="w-full bg-white/[0.06] rounded-full h-2 overflow-hidden">
         <div
           className={`${color} h-full rounded-full transition-all duration-1000 ease-out`}
           style={{ width: show ? `${dimension.score}%` : "0%" }}
@@ -139,7 +139,7 @@ function DimensionBar({
             </span>
           ))}
           {dimension.weaknesses.slice(0, 1).map((w, i) => (
-            <span key={`w-${i}`} className="text-[10px] text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
+            <span key={`w-${i}`} className="text-[10px] text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded">
               ✗ {w}
             </span>
           ))}
@@ -170,8 +170,8 @@ function FeedbackSection({
       </h4>
       <ul className="space-y-1.5">
         {items.map((item, i) => (
-          <li key={i} className="text-sm text-gray-600 leading-relaxed flex items-start gap-2">
-            <span className="text-gray-300 mt-0.5 shrink-0">•</span>
+          <li key={i} className="text-sm text-gray-400 leading-relaxed flex items-start gap-2">
+            <span className="text-gray-600 mt-0.5 shrink-0">•</span>
             {item}
           </li>
         ))}
@@ -238,7 +238,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
         {testName && (
           <p className="text-xs text-gray-400 mb-1 uppercase tracking-wide">{testName}</p>
         )}
-        <h1 className="text-xl font-bold text-gray-900 mb-6">Your PromptScore™</h1>
+        <h1 className="text-xl font-bold text-white mb-6">Your PromptScore™</h1>
 
         <div className="flex flex-col items-center gap-4">
           <CircularProgress
@@ -249,7 +249,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
           <div className="flex items-center gap-3">
             <GradeBadge grade={result.letterGrade} />
             <div className="text-left">
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-sm font-semibold text-white">
                 Grade {result.letterGrade}
               </p>
               <p className="text-xs text-gray-400">
@@ -262,11 +262,11 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
 
       {/* ── Dimension Breakdown ── */}
       <div
-        className={`bg-white rounded-lg border border-gray-200 p-5 transition-all duration-700 delay-200 ${
+        className={`bg-[#0C1120] rounded-lg border border-white/[0.06] p-5 transition-all duration-700 delay-200 ${
           animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
-        <h2 className="text-sm font-semibold text-gray-900 mb-5">Score Breakdown</h2>
+        <h2 className="text-sm font-semibold text-white mb-5">Score Breakdown</h2>
         <div className="space-y-5">
           {dimensionConfig.map((dim, i) => (
             <DimensionBar
@@ -287,34 +287,34 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
           animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
-        <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
+        <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-4 text-center">
           <div className="text-[10px] text-gray-400 uppercase tracking-wide">Tokens</div>
-          <div className="text-lg font-bold text-gray-900 mt-0.5">
+          <div className="text-lg font-bold text-white mt-0.5">
             {result.stats.tokensUsed.toLocaleString()}
           </div>
           <div className="text-[11px] text-gray-300">of {result.stats.tokenBudget.toLocaleString()}</div>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
+        <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-4 text-center">
           <div className="text-[10px] text-gray-400 uppercase tracking-wide">Time</div>
-          <div className="text-lg font-bold text-gray-900 mt-0.5">
+          <div className="text-lg font-bold text-white mt-0.5">
             {formatTime(result.stats.timeSpentSeconds)}
           </div>
           <div className="text-[11px] text-gray-300">of {result.stats.timeLimitMinutes}:00</div>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
+        <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-4 text-center">
           <div className="text-[10px] text-gray-400 uppercase tracking-wide">Prompts</div>
-          <div className="text-lg font-bold text-gray-900 mt-0.5">{result.stats.totalPrompts}</div>
+          <div className="text-lg font-bold text-white mt-0.5">{result.stats.totalPrompts}</div>
           <div className="text-[11px] text-gray-300">of {result.stats.maxAttempts}</div>
         </div>
       </div>
 
       {/* ── Feedback Summary ── */}
       <div
-        className={`bg-white rounded-lg border border-gray-200 p-5 transition-all duration-700 delay-500 ${
+        className={`bg-[#0C1120] rounded-lg border border-white/[0.06] p-5 transition-all duration-700 delay-500 ${
           animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
-        <p className="text-sm text-gray-700 leading-relaxed mb-4">
+        <p className="text-sm text-gray-300 leading-relaxed mb-4">
           {result.feedback.summary}
         </p>
 
@@ -336,7 +336,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
         {/* Toggle detailed view */}
         <button
           onClick={() => setShowDetails(!showDetails)}
-          className="mt-4 text-xs text-[#6366F1] hover:text-[#4F46E5] font-medium flex items-center gap-1"
+          className="mt-4 text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1"
         >
           {showDetails ? "Hide" : "Show"} detailed feedback
           <svg
@@ -351,7 +351,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
         </button>
 
         {showDetails && (
-          <div className="mt-4 pt-4 border-t border-gray-100 space-y-4">
+          <div className="mt-4 pt-4 border-t border-white/[0.06] space-y-4">
             <FeedbackSection
               title="Improvement Plan"
               items={result.feedback.improvementPlan}
@@ -366,15 +366,15 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
               if (allFeedback.length <= 1) return null;
 
               return (
-                <div key={dim.key} className="p-3 bg-gray-50 rounded-md">
-                  <h5 className="text-xs font-semibold text-gray-700 mb-2">
+                <div key={dim.key} className="p-3 bg-white/[0.03] rounded-md">
+                  <h5 className="text-xs font-semibold text-gray-300 mb-2">
                     {dim.label} — {d.score}/100
                   </h5>
                   {d.suggestions.length > 0 && (
                     <ul className="space-y-1">
                       {d.suggestions.map((s, i) => (
-                        <li key={i} className="text-xs text-gray-500 flex items-start gap-1.5">
-                          <span className="text-[#6366F1] shrink-0">→</span> {s}
+                        <li key={i} className="text-xs text-gray-400 flex items-start gap-1.5">
+                          <span className="text-indigo-400 shrink-0">→</span> {s}
                         </li>
                       ))}
                     </ul>
@@ -399,7 +399,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
         <div className="relative">
           <button
             onClick={handleShare}
-            className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />

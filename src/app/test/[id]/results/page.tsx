@@ -142,10 +142,10 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0A0F1C] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-[#6366F1] border-t-transparent rounded-full mx-auto mb-3" />
-          <p className="text-sm text-gray-400">Calculating your score...</p>
+          <div className="animate-spin w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full mx-auto mb-3" />
+          <p className="text-sm text-gray-500">Calculating your score...</p>
         </div>
       </div>
     );
@@ -153,10 +153,10 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
 
   if (!result) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0A0F1C] flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-500 text-sm mb-4">No results found for this test session.</p>
-          <Link href="/" className="text-sm text-[#6366F1] hover:text-[#4F46E5] font-medium">← Back to Home</Link>
+          <Link href="/" className="text-sm text-indigo-400 hover:text-indigo-300 font-medium">Back to Home</Link>
         </div>
       </div>
     );
@@ -173,25 +173,27 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
   const testName = result.testName || "Test";
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-30">
+    <div className="min-h-screen bg-[#0A0F1C]">
+      <div className="bg-[#0C1120] border-b border-white/[0.06] sticky top-0 z-30">
         <div className="max-w-3xl mx-auto px-5 py-3 flex items-center justify-between">
-          <Link href="/" className="font-bold text-base text-gray-900">InpromptiFy</Link>
-          <span className="text-xs text-gray-400">Assessment Results</span>
+          <Link href="/" className="font-mono text-sm text-white">
+            <span className="text-indigo-500 opacity-60">[</span>InpromptiFy<span className="text-indigo-500 opacity-60">]</span>
+          </Link>
+          <span className="text-xs text-gray-600">Assessment Results</span>
         </div>
       </div>
 
       {/* Guest signup prompt */}
       {showSignupPrompt && (
-        <div className="bg-[#6366F1]/5 border-b border-[#6366F1]/10">
+        <div className="bg-indigo-500/[0.06] border-b border-indigo-500/[0.1]">
           <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#6366F1]">Create an account to save your PromptScore™</p>
-              <p className="text-xs text-gray-500 mt-0.5">Appear on the leaderboard and track your progress</p>
+              <p className="text-sm font-medium text-indigo-400">Create an account to save your PromptScore</p>
+              <p className="text-xs text-gray-600 mt-0.5">Appear on the leaderboard and track your progress</p>
             </div>
             <div className="flex items-center gap-2">
-              <Link href={`/signup?link=${id}`} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Sign Up</Link>
-              <button onClick={() => setShowSignupPrompt(false)} className="text-gray-400 hover:text-gray-600 text-sm px-2">Dismiss</button>
+              <Link href={`/signup?link=${id}`} className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Sign Up</Link>
+              <button onClick={() => setShowSignupPrompt(false)} className="text-gray-600 hover:text-gray-400 text-sm px-2">Dismiss</button>
             </div>
           </div>
         </div>
@@ -211,10 +213,10 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
       </div>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-[#0C1120] border-b border-white/[0.06]">
         <div className="max-w-3xl mx-auto px-5 flex gap-0">
           {([{ key: "overview", label: "Overview" }, { key: "journey", label: "Your Journey" }, { key: "comparison", label: "Comparison" }] as const).map((tab) => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.key ? "border-[#6366F1] text-[#6366F1]" : "border-transparent text-gray-400 hover:text-gray-600"}`}>{tab.label}</button>
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.key ? "border-indigo-500 text-indigo-400" : "border-transparent text-gray-600 hover:text-gray-400"}`}>{tab.label}</button>
           ))}
         </div>
       </div>
@@ -229,13 +231,13 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
         {activeTab === "journey" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-sm font-semibold text-gray-900 mb-1">Your Prompt Journey</h2>
+              <h2 className="text-sm font-semibold text-white mb-1">Your Prompt Journey</h2>
               <p className="text-xs text-gray-400 mb-4">
                 {messages.length > 0 ? `You made ${Math.ceil(messages.length / 2)} prompt attempt${Math.ceil(messages.length / 2) !== 1 ? "s" : ""}.` : "No prompt history available."}
               </p>
               {messages.length > 0 ? <AttemptTimeline messages={messages} /> : (
-                <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
-                  <p className="text-gray-400 text-sm">Prompt history is only available for sessions completed in this browser tab.</p>
+                <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-8 text-center">
+                  <p className="text-gray-500 text-sm">Prompt history is only available for sessions completed in this browser tab.</p>
                 </div>
               )}
             </div>
@@ -244,13 +246,13 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
 
         {activeTab === "comparison" && (
           <div className="space-y-6">
-            <div className="bg-white rounded-lg border border-gray-200 p-5 text-center">
-              <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">Your Percentile</p>
-              <div className="text-5xl font-bold text-[#6366F1] mb-1">{result.percentile}<span className="text-lg text-gray-400 font-normal">th</span></div>
+            <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-5 text-center">
+              <p className="text-xs text-gray-600 uppercase tracking-wide mb-2">Your Percentile</p>
+              <div className="text-5xl font-bold text-indigo-400 mb-1">{result.percentile}<span className="text-lg text-gray-600 font-normal">th</span></div>
               <p className="text-sm text-gray-500">You scored higher than {result.percentile}% of all candidates</p>
             </div>
-            <div className="bg-white rounded-lg border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Score Distribution</h3>
+            <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-5">
+              <h3 className="text-sm font-semibold text-white mb-4">Score Distribution</h3>
               <ScoreDistributionChart userScore={result.promptScore} />
             </div>
           </div>
@@ -282,16 +284,16 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
                 URL.revokeObjectURL(url);
               }
             }}
-            className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
           >
             Download PDF
           </button>
           <div className="relative">
-            <button onClick={handleShare} className="w-full bg-white border border-gray-200 hover:border-gray-300 text-gray-700 px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5">Share</button>
-            {shareTooltip && <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10">Copied!</div>}
+            <button onClick={handleShare} className="w-full bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-gray-400 px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5">Share</button>
+            {shareTooltip && <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-gray-900 text-[10px] px-2 py-1 rounded whitespace-nowrap z-10">Copied!</div>}
           </div>
-          <Link href="/" className="bg-white border border-gray-200 hover:border-gray-300 text-gray-700 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-center">Try Another</Link>
-          <Link href="/jobs" className="bg-white border border-gray-200 hover:border-gray-300 text-gray-700 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-center">Job Board</Link>
+          <Link href="/" className="bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-gray-400 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-center">Try Another</Link>
+          <Link href="/jobs" className="bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-gray-400 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-center">Job Board</Link>
         </div>
       </div>
     </div>

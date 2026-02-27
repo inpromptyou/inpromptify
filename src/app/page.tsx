@@ -22,12 +22,12 @@ export default function HomePage() {
                 // assess what matters
               </p>
               <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-bold text-white tracking-tight leading-[1.08] mb-5 animate-fade-in-up-delay-1">
-                Your team is wasting money on AI.{" "}
-                <span className="text-gray-500">Measure it.</span>
+                Measure how your team{" "}
+                <span className="text-gray-500">actually uses AI.</span>
               </h1>
               <p className="text-base text-gray-500 leading-relaxed mb-8 max-w-lg animate-fade-in-up-delay-2">
-                Most employees use 3x more tokens than necessary. InpromptiFy measures prompting
-                efficiency across your team and shows you exactly where the waste is.
+                Prompt quality varies 10x between employees. InpromptiFy scores prompting
+                efficiency, identifies skill gaps, and shows you where AI spend turns into AI value.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 animate-fade-in-up-delay-3">
                 <Link href="/signup?plan=team-free" className="inline-flex items-center justify-center text-white bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
@@ -45,16 +45,19 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ─── Social Proof ─── */}
+        {/* ─── Early Access Banner ─── */}
         <section className="border-y border-white/[0.04]">
-          <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-10">
-            <p className="text-center text-[11px] font-medium text-gray-600 uppercase tracking-widest mb-6">
-              Trusted by forward-thinking teams
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-              {["Acme Corp", "Globex", "Initech", "Hooli", "Pied Piper", "Aviato"].map((name) => (
-                <span key={name} className="text-sm font-medium text-gray-700 tracking-wide">{name}</span>
-              ))}
+          <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-sm text-gray-400">Now in early access</span>
+              </div>
+              <span className="hidden sm:block h-4 w-px bg-white/[0.06]" />
+              <span className="text-sm text-gray-500">Free team assessments for the first 100 companies</span>
+              <Link href="/signup?plan=team-free" className="text-sm text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+                Claim your spot
+              </Link>
             </div>
           </div>
         </section>
@@ -75,19 +78,19 @@ export default function HomePage() {
             <div className="grid md:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden mb-10">
               {[
                 {
-                  stat: "3.2x",
-                  label: "Average token overuse per employee",
-                  desc: "Most employees use 3x more tokens than necessary to get the same result. That waste compounds across every team, every day.",
+                  stat: "10x",
+                  label: "Variation in prompt effectiveness",
+                  desc: "Harvard and Wharton research shows prompt quality varies by an order of magnitude between users performing the same task. Most teams have no way to measure this.",
                 },
                 {
-                  stat: "41%",
-                  label: "Of AI spend is wasted",
-                  desc: "Inefficient prompting inflates API costs, slows workflows, and produces worse outputs. The problem scales with headcount.",
+                  stat: "30%",
+                  label: "Of GenAI projects abandoned",
+                  desc: "Gartner predicts nearly a third of generative AI projects will be abandoned after proof of concept — often because teams lack the skills to use the tools effectively.",
                 },
                 {
-                  stat: "$27K",
-                  label: "Average annual waste per 50 employees",
-                  desc: "At scale, poor prompting costs more than most SaaS subscriptions. And unlike SaaS, nobody is tracking it.",
+                  stat: "$600B",
+                  label: "AI spend vs. value gap",
+                  desc: "Sequoia Capital identified a $600B gap between AI infrastructure investment and actual revenue generated. The bottleneck is not the models — it is how people use them.",
                 },
               ].map((item) => (
                 <div key={item.stat} className="bg-[#0C1120] p-7 text-center">
@@ -99,7 +102,7 @@ export default function HomePage() {
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-400 mb-6">
-                InpromptiFy measures exactly where the waste is — and who needs training.
+                InpromptiFy measures prompting skill across your team so you can close the gap between AI spend and AI value.
               </p>
               <Link
                 href="/pricing"
@@ -130,7 +133,7 @@ export default function HomePage() {
                   falls short. No more guessing.
                 </p>
                 <p className="text-sm text-indigo-400/80 font-medium">
-                  Companies using InpromptiFy reduce average AI spend by 34% within 90 days.
+                  The same result with fewer tokens means lower costs and faster workflows — that is what efficient prompting looks like.
                 </p>
               </div>
               <ScorePreview />
@@ -365,11 +368,11 @@ export default function HomePage() {
           <div className="absolute inset-0 dot-grid opacity-15" />
           <div className="relative max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-28 text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 tracking-tight">
-              Stop overpaying for AI. Start optimizing.
+              Know who can actually prompt.
             </h2>
             <p className="text-sm text-gray-500 mb-8 max-w-md mx-auto">
-              The average team wastes thousands on inefficient prompting.
-              Find out where your money is going.
+              The gap between good and bad prompting is 10x. Start measuring it —
+              free for teams up to 25 people.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/signup?plan=team-free" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
