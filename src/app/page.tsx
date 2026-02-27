@@ -22,16 +22,16 @@ export default function HomePage() {
                 // assess what matters
               </p>
               <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-bold text-white tracking-tight leading-[1.08] mb-5 animate-fade-in-up-delay-1">
-                Test any AI skill.{" "}
-                <span className="text-gray-500">Not just presets.</span>
+                Your team is wasting money on AI.{" "}
+                <span className="text-gray-500">Measure it.</span>
               </h1>
               <p className="text-base text-gray-500 leading-relaxed mb-8 max-w-lg animate-fade-in-up-delay-2">
-                From legal drafting to code debugging — create a test for any role in 30 seconds.
-                Describe what you need, AI builds the assessment.
+                Most employees use 3x more tokens than necessary. InpromptiFy measures prompting
+                efficiency across your team and shows you exactly where the waste is.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 animate-fade-in-up-delay-3">
-                <Link href="/signup" className="inline-flex items-center justify-center text-white bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
-                  Start Free
+                <Link href="/signup?plan=team-free" className="inline-flex items-center justify-center text-white bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
+                  Assess Your Team Free
                 </Link>
                 <Link href="/test/demo" className="inline-flex items-center justify-center text-gray-400 hover:text-gray-200 px-6 py-2.5 rounded-md text-sm transition-colors border border-white/[0.06] hover:border-white/[0.12]">
                   Try the Demo
@@ -39,7 +39,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero product mockup */}
             <div className="animate-fade-in-up-delay-3">
               <HeroMockup />
             </div>
@@ -60,8 +59,60 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ─── Scoring Preview ─── */}
+        {/* ─── The Cost of Bad Prompting ─── */}
         <section className="relative">
+          <div className="relative max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-28">
+            <div className="text-center mb-14">
+              <p className="text-[11px] font-mono text-indigo-400/70 uppercase tracking-wider mb-3">The Problem</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-3">
+                Your team is burning money on bad prompts
+              </h2>
+              <p className="text-sm text-gray-500 max-w-lg mx-auto">
+                Every inefficient prompt costs you tokens, time, and output quality.
+                Most organizations have no visibility into the problem.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden mb-10">
+              {[
+                {
+                  stat: "3.2x",
+                  label: "Average token overuse per employee",
+                  desc: "Most employees use 3x more tokens than necessary to get the same result. That waste compounds across every team, every day.",
+                },
+                {
+                  stat: "41%",
+                  label: "Of AI spend is wasted",
+                  desc: "Inefficient prompting inflates API costs, slows workflows, and produces worse outputs. The problem scales with headcount.",
+                },
+                {
+                  stat: "$27K",
+                  label: "Average annual waste per 50 employees",
+                  desc: "At scale, poor prompting costs more than most SaaS subscriptions. And unlike SaaS, nobody is tracking it.",
+                },
+              ].map((item) => (
+                <div key={item.stat} className="bg-[#0C1120] p-7 text-center">
+                  <span className="text-4xl md:text-5xl font-bold text-indigo-400 block mb-2">{item.stat}</span>
+                  <h3 className="text-sm font-semibold text-white mb-2">{item.label}</h3>
+                  <p className="text-[13px] text-gray-500 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-gray-400 mb-6">
+                InpromptiFy measures exactly where the waste is — and who needs training.
+              </p>
+              <Link
+                href="/pricing"
+                className="inline-flex items-center justify-center text-gray-400 hover:text-gray-200 px-6 py-2.5 rounded-md text-sm transition-colors border border-white/[0.06] hover:border-white/[0.12]"
+              >
+                Calculate Your Waste
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── Scoring Preview ─── */}
+        <section className="border-y border-white/[0.04]">
           <div className="relative max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-28">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
@@ -70,12 +121,16 @@ export default function HomePage() {
                   A score that means something
                 </h2>
                 <p className="text-sm text-gray-500 leading-relaxed mb-4">
-                  PromptScore evaluates efficiency, output quality, iteration strategy,
-                  and token economy. One number, fully comparable across candidates.
+                  PromptScore evaluates four dimensions: output quality, token efficiency,
+                  iteration strategy, and speed. Fewer tokens for the same result means
+                  lower costs and faster workflows.
                 </p>
-                <p className="text-sm text-gray-500 leading-relaxed">
-                  Detailed breakdowns show exactly where a candidate excels—or
+                <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                  Detailed breakdowns show exactly where a candidate excels — or
                   falls short. No more guessing.
+                </p>
+                <p className="text-sm text-indigo-400/80 font-medium">
+                  Companies using InpromptiFy reduce average AI spend by 34% within 90 days.
                 </p>
               </div>
               <ScorePreview />
@@ -84,7 +139,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── Dashboard Preview ─── */}
-        <section className="border-y border-white/[0.04]">
+        <section className="relative">
           <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-28">
             <div className="text-center mb-12">
               <p className="text-[11px] font-mono text-indigo-400/70 uppercase tracking-wider mb-3">Dashboard</p>
@@ -96,6 +151,79 @@ export default function HomePage() {
               </p>
             </div>
             <DashboardPreview />
+          </div>
+        </section>
+
+        {/* ─── Free Team Assessment ─── */}
+        <section className="border-y border-white/[0.04]">
+          <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-28">
+            <div className="text-center mb-14">
+              <p className="text-[11px] font-mono text-indigo-400/70 uppercase tracking-wider mb-3">For Teams</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-3">
+                See how your team actually performs — free
+              </h2>
+              <p className="text-sm text-gray-500 max-w-xl mx-auto">
+                Issue a standardized AI skills assessment to your entire team. Get a breakdown
+                of who prompts efficiently, who needs training, and where your biggest cost
+                savings are. No credit card required.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8 items-start">
+              <div className="space-y-4">
+                {[
+                  "Standardized prompt assessment for up to 25 employees",
+                  "Individual PromptScore breakdowns",
+                  "Team efficiency heatmap",
+                  "Token usage analysis per person",
+                  "Exportable PDF report",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+                    <span className="text-sm text-gray-400">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-[#0C1120] rounded-xl border border-white/[0.06] p-6">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-sm font-semibold text-white">Team Results</h3>
+                  <span className="text-[10px] font-mono text-indigo-400/70 uppercase">Live Preview</span>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    { name: "S. Chen", score: 92, efficiency: "Top 5%", bar: "w-[92%]" },
+                    { name: "M. Rivera", score: 78, efficiency: "Top 25%", bar: "w-[78%]" },
+                    { name: "J. Park", score: 65, efficiency: "Average", bar: "w-[65%]" },
+                    { name: "A. Thompson", score: 41, efficiency: "Needs Training", bar: "w-[41%]" },
+                  ].map((row) => (
+                    <div key={row.name} className="flex items-center gap-3">
+                      <span className="text-[13px] text-gray-400 w-24 shrink-0">{row.name}</span>
+                      <div className="flex-1 h-2 bg-white/[0.04] rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full ${row.score >= 80 ? "bg-indigo-500" : row.score >= 60 ? "bg-indigo-500/60" : "bg-indigo-500/30"} ${row.bar}`} />
+                      </div>
+                      <span className="text-[11px] font-mono text-gray-600 w-10 text-right">{row.score}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 pt-4 border-t border-white/[0.04] flex justify-between">
+                  <span className="text-[11px] text-gray-600">Team avg: 69</span>
+                  <span className="text-[11px] text-indigo-400/70">Est. savings: $14K/yr</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mt-10">
+              <Link
+                href="/signup?plan=team-free"
+                className="inline-flex items-center justify-center text-white bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 rounded-md text-sm font-medium transition-colors"
+              >
+                Assess Your Team Free
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center text-gray-400 hover:text-gray-200 px-6 py-2.5 rounded-md text-sm transition-colors border border-white/[0.06] hover:border-white/[0.12]"
+              >
+                Talk to Sales
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -111,8 +239,8 @@ export default function HomePage() {
             <div className="grid md:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden">
               {[
                 { step: "01", title: "Create", desc: "Describe what you want to test. AI generates the task, scoring criteria, and settings in seconds." },
-                { step: "02", title: "Assess", desc: "Candidates enter a sandboxed environment and solve the task with a real LLM." },
-                { step: "03", title: "Hire", desc: "Get a PromptScore 0–100 with detailed analytics. Compare and decide." },
+                { step: "02", title: "Assess", desc: "Candidates enter a sandboxed environment and solve the task with a real LLM. Token usage is tracked." },
+                { step: "03", title: "Optimize", desc: "Get PromptScores with detailed cost analytics. Identify who needs training and where money is being wasted." },
               ].map((item) => (
                 <div key={item.step} className="bg-[#0C1120] p-7">
                   <span className="text-[11px] font-mono text-gray-600 block mb-4">{item.step}</span>
@@ -149,9 +277,11 @@ export default function HomePage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden">
               {[
                 { title: "Real LLM Sandbox", desc: "Candidates use actual AI models in a controlled, monitored environment." },
-                { title: "Prompt Scoring", desc: "Automated 0–100 scoring based on efficiency, quality, and iteration count." },
+                { title: "Prompt Scoring", desc: "Automated 0-100 scoring based on efficiency, quality, and iteration count." },
                 { title: "Any Skill, Any Role", desc: "Legal drafting, code debugging, medical reports, ad copy — test anything with custom criteria." },
-                { title: "Token Budgets", desc: "Set token limits to measure how efficiently candidates work with AI." },
+                { title: "Token Budgets", desc: "Set token limits to measure how efficiently candidates work with AI. Lower usage, same quality — that is the goal." },
+                { title: "Cost Analytics", desc: "Track per-employee AI spend and identify optimization opportunities across your organization." },
+                { title: "Team Benchmarks", desc: "See how your team compares to industry averages with anonymized benchmark data." },
                 { title: "Time Controls", desc: "Configurable time limits keep assessments standardized and fair." },
                 { title: "Analytics Dashboard", desc: "Compare candidates side-by-side with detailed performance breakdowns." },
               ].map((f) => (
@@ -213,16 +343,16 @@ export default function HomePage() {
             </div>
             <div className="grid md:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden">
               {[
-                { icon: "📋", title: "Assessments", desc: "Professional AI prompting tests. Prove your skills with a PromptScore.", href: "/tests", cta: "Browse Assessments" },
-                { icon: "💼", title: "Jobs", desc: "Real job openings. Apply by completing a prompting challenge.", href: "/jobs", cta: "Browse Jobs" },
-                { icon: "🎮", title: "Explore", desc: "Fun, casual challenges. Sharpen your AI skills at your own pace.", href: "/explore", cta: "Start Exploring" },
+                { label: "01", title: "Assessments", desc: "Professional AI prompting tests. Prove your skills with a PromptScore.", href: "/tests", cta: "Browse Assessments" },
+                { label: "02", title: "Jobs", desc: "Real job openings. Apply by completing a prompting challenge.", href: "/jobs", cta: "Browse Jobs" },
+                { label: "03", title: "Explore", desc: "Casual challenges to sharpen your AI skills at your own pace.", href: "/explore", cta: "Start Exploring" },
               ].map((item) => (
                 <div key={item.title} className="bg-[#0C1120] p-7 flex flex-col">
-                  <span className="text-2xl mb-3">{item.icon}</span>
+                  <span className="text-[11px] font-mono text-gray-600 block mb-3">{item.label}</span>
                   <h3 className="text-base font-semibold text-white mb-2">{item.title}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed mb-5 flex-1">{item.desc}</p>
                   <Link href={item.href} className="text-[13px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
-                    {item.cta} →
+                    {item.cta} &rarr;
                   </Link>
                 </div>
               ))}
@@ -235,17 +365,18 @@ export default function HomePage() {
           <div className="absolute inset-0 dot-grid opacity-15" />
           <div className="relative max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-28 text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 tracking-tight">
-              Stop guessing. Start measuring.
+              Stop overpaying for AI. Start optimizing.
             </h2>
             <p className="text-sm text-gray-500 mb-8 max-w-md mx-auto">
-              Describe what you need, get a complete assessment in 30 seconds.
+              The average team wastes thousands on inefficient prompting.
+              Find out where your money is going.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/signup" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
-                Create your first test
+              <Link href="/signup?plan=team-free" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
+                Assess Your Team Free
               </Link>
-              <Link href="/how-it-works" className="inline-flex items-center justify-center text-gray-400 hover:text-gray-200 px-6 py-2.5 rounded-md text-sm transition-colors border border-white/[0.06] hover:border-white/[0.12]">
-                See how it works
+              <Link href="/pricing" className="inline-flex items-center justify-center text-gray-400 hover:text-gray-200 px-6 py-2.5 rounded-md text-sm transition-colors border border-white/[0.06] hover:border-white/[0.12]">
+                See Pricing
               </Link>
             </div>
           </div>

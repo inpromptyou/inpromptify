@@ -1,16 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+
+const menuGroups = [
+  {
+    label: "Platform",
+    links: [
+      { label: "Assessments", href: "/tests" },
+      { label: "Explore", href: "/explore" },
+      { label: "Leaderboard", href: "/leaderboard" },
+    ],
+  },
+  {
+    label: "Company",
+    links: [
+      { label: "How It Works", href: "/how-it-works" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+  {
+    label: "Opportunities",
+    links: [{ label: "Jobs", href: "/jobs" }],
+  },
+];
 
 export default function Nav({ transparent = false }: { transparent?: boolean }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
   const isDark = transparent;
@@ -29,7 +64,7 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 items-center">
-          {/* Logo — monospace wordmark with bracket motif */}
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-0 group">
             <span className={`font-mono text-lg tracking-tight select-none ${isDark ? "text-white" : "text-gray-900"}`}>
               <span className="text-indigo-500 font-normal opacity-60 group-hover:opacity-100 transition-opacity">[</span>
@@ -40,32 +75,70 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
             </span>
           </Link>
 
-          {/* Center nav links — subtle, no pills */}
+          {/* Desktop: dropdown + auth */}
           <div className="hidden md:flex items-center gap-1">
-            {[
-              { label: "Assessments", href: "/tests" },
-              { label: "Jobs", href: "/jobs" },
-              { label: "Explore", href: "/explore" },
-              { label: "How It Works", href: "/how-it-works" },
-              { label: "Pricing", href: "/pricing" },
-              { label: "Leaderboard", href: "/leaderboard" },
-            ].map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-[13px] px-3 py-1.5 rounded transition-colors ${
-                  isDark
-                    ? "text-gray-500 hover:text-gray-200"
-                    : "text-gray-500 hover:text-gray-900"
+            <div ref={menuRef} className="relative">
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className={`text-[13px] px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 ${
+                  isDark ? "text-gray-400 hover:text-gray-200" : "text-gray-500 hover:text-gray-900"
                 }`}
               >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+                Menu
+                <svg
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${menuOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {menuOpen && (
+                <div
+                  className={`absolute top-full left-0 mt-2 w-56 rounded-lg border shadow-xl ${
+                    isDark
+                      ? "bg-[#0C1120] border-white/[0.08] shadow-black/40"
+                      : "bg-white border-gray-200 shadow-gray-200/50"
+                  }`}
+                >
+                  <div className="py-2">
+                    {menuGroups.map((group, i) => (
+                      <div key={group.label}>
+                        {i > 0 && (
+                          <div className={`mx-3 my-1.5 h-px ${isDark ? "bg-white/[0.06]" : "bg-gray-100"}`} />
+                        )}
+                        <p
+                          className={`px-4 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider ${
+                            isDark ? "text-gray-600" : "text-gray-400"
+                          }`}
+                        >
+                          {group.label}
+                        </p>
+                        {group.links.map((link) => (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={() => setMenuOpen(false)}
+                            className={`block px-4 py-1.5 text-[13px] transition-colors ${
+                              isDark
+                                ? "text-gray-400 hover:text-white hover:bg-white/[0.04]"
+                                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                            }`}
+                          >
+                            {link.label}
+                          </Link>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
-          {/* Right side — login + CTA */}
-          <div className="hidden md:flex items-center gap-1">
+            <span className={`mx-2 h-4 w-px ${isDark ? "bg-white/10" : "bg-gray-200"}`} />
+
             <Link
               href="/login"
               className={`text-[13px] px-3 py-1.5 rounded transition-colors ${
@@ -74,7 +147,6 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
             >
               Log in
             </Link>
-            <span className={`mx-1 h-4 w-px ${isDark ? "bg-white/10" : "bg-gray-200"}`} />
             <Link
               href="/signup"
               className={`text-[13px] font-medium px-4 py-1.5 rounded-md transition-all ${
@@ -83,11 +155,11 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
                   : "text-gray-900 bg-gray-100 hover:bg-gray-200"
               }`}
             >
-              Get Started →
+              Get Started
             </Link>
           </div>
 
-          {/* Mobile toggle — minimal line icon */}
+          {/* Mobile toggle */}
           <button
             className={`md:hidden p-1.5 rounded ${isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -95,12 +167,12 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
           >
             <div className="w-5 flex flex-col gap-[5px]">
               <span
-                className={`block h-[1.5px] rounded-full transition-all duration-200 ${isDark ? "bg-current" : "bg-current"} ${
+                className={`block h-[1.5px] rounded-full transition-all duration-200 bg-current ${
                   mobileOpen ? "rotate-45 translate-y-[3.25px]" : ""
                 }`}
               />
               <span
-                className={`block h-[1.5px] rounded-full transition-all duration-200 ${isDark ? "bg-current" : "bg-current"} ${
+                className={`block h-[1.5px] rounded-full transition-all duration-200 bg-current ${
                   mobileOpen ? "-rotate-45 -translate-y-[3.25px]" : ""
                 }`}
               />
@@ -109,29 +181,29 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
         </div>
       </div>
 
-      {/* Mobile dropdown — clean, no overlay */}
+      {/* Mobile dropdown */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-200 ${
-          mobileOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+          mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className={`px-5 pb-4 pt-2 space-y-1 ${isDark ? "border-t border-white/[0.04]" : "border-t border-gray-100"}`}>
-          {[
-            { label: "Assessments", href: "/tests" },
-            { label: "Jobs", href: "/jobs" },
-            { label: "Explore", href: "/explore" },
-            { label: "How It Works", href: "/how-it-works" },
-            { label: "Pricing", href: "/pricing" },
-            { label: "Leaderboard", href: "/leaderboard" },
-          ].map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className={`block text-sm py-2 ${isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}
-            >
-              {link.label}
-            </Link>
+          {menuGroups.map((group) => (
+            <div key={group.label}>
+              <p className={`text-[10px] font-semibold uppercase tracking-wider pt-3 pb-1 ${isDark ? "text-gray-600" : "text-gray-400"}`}>
+                {group.label}
+              </p>
+              {group.links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block text-sm py-1.5 ${isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           ))}
           <div className={`h-px my-2 ${isDark ? "bg-white/[0.04]" : "bg-gray-100"}`} />
           <Link href="/login" onClick={() => setMobileOpen(false)} className={`block text-sm py-2 ${isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}>
@@ -142,7 +214,7 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
             onClick={() => setMobileOpen(false)}
             className={`block text-sm py-2 font-medium ${isDark ? "text-indigo-400" : "text-indigo-600"}`}
           >
-            Get Started →
+            Get Started
           </Link>
         </div>
       </div>
