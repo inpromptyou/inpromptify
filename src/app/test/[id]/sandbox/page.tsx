@@ -190,6 +190,7 @@ export default function TestSandboxPage({
       if (!res.ok) throw new Error("Evaluation failed");
       const scores = await res.json();
 
+      // Save to sessionStorage for results page
       sessionStorage.setItem(
         `test-result-${test.id}`,
         JSON.stringify({
@@ -204,6 +205,31 @@ export default function TestSandboxPage({
           timeSpentSeconds,
         })
       );
+
+      // Save to database
+      const guestInfo = sessionStorage.getItem(`guest-${test.id}`);
+      const guest = guestInfo ? JSON.parse(guestInfo) : null;
+      const inviteToken = sessionStorage.getItem(`invite-token-${test.id}`);
+      
+      fetch("/api/test/save-result", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          testId: test.id,
+          candidateName: guest?.name,
+          candidateEmail: guest?.email,
+          score: scores.promptScore,
+          efficiency: scores.dimensions?.efficiency?.score,
+          speed: scores.dimensions?.speed?.score,
+          accuracy: scores.dimensions?.promptQuality?.score,
+          tokensUsed,
+          attemptsUsed: attempts,
+          timeSpentMinutes: Math.ceil(timeSpentSeconds / 60),
+          messages,
+          inviteToken,
+          scoringResult: scores,
+        }),
+      }).catch(() => {}); // Fire and forget
 
       setSandboxState("submitted");
       router.push(`/test/${test.id}/results`);
