@@ -105,6 +105,7 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"overview" | "journey" | "comparison">("overview");
   const [shareTooltip, setShareTooltip] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
 
   useEffect(() => {
@@ -127,14 +128,25 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
     setLoading(false);
   }, [id]);
 
+  const [attemptId, setAttemptId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Try to get attemptId from sessionStorage (saved by save-result)
+    const aid = sessionStorage.getItem(`attempt-id-${id}`);
+    if (aid) setAttemptId(aid);
+  }, [id]);
+
+  const shareUrl = attemptId ? `https://inpromptify.com/score/${attemptId}` : null;
+
   const handleShare = async () => {
+    const url = shareUrl || "https://inpromptify.com";
     const text = result
-      ? `I scored ${result.promptScore}/100 (Grade: ${result.letterGrade}) on "${result.testName || "InpromptiFy"}"! 🧠\n\nBetter than ${result.percentile}% of candidates.\n\nTest your AI prompting skills → InpromptiFy.ai`
+      ? `I scored ${result.promptScore}/100 (Grade: ${result.letterGrade}) on "${result.testName || "InpromptiFy"}"\n\nBetter than ${result.percentile}% of candidates.\n\nTest your AI prompting skills:`
       : "";
     if (navigator.share) {
-      try { await navigator.share({ title: "My PromptScore™", text }); } catch { /* cancelled */ }
+      try { await navigator.share({ title: "My PromptScore", text, url }); } catch { /* cancelled */ }
     } else {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(shareUrl ? `${text}\n${url}` : text);
       setShareTooltip(true);
       setTimeout(() => setShareTooltip(false), 2000);
     }
@@ -414,11 +426,23 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
             Download PDF
           </button>
           <div className="relative">
-            <button onClick={handleShare} className="w-full bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-gray-400 px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5">Share</button>
+            <button onClick={handleShare} className="w-full bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-gray-400 px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5">
+              {copied ? "Link Copied" : "Share Score"}
+            </button>
             {shareTooltip && <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-gray-900 text-[10px] px-2 py-1 rounded whitespace-nowrap z-10">Copied!</div>}
           </div>
-          <Link href="/" className="bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-gray-400 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-center">Try Another</Link>
-          <Link href="/jobs" className="bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-gray-400 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-center">Job Board</Link>
+          {attemptId && (
+            <a
+              href={`https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent("AI Proficiency — PromptScore " + result.promptScore)}&organizationName=${encodeURIComponent("InpromptiFy")}&certUrl=${encodeURIComponent("https://inpromptify.com/score/" + attemptId)}&certId=${attemptId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#0A66C2] hover:bg-[#004182] text-white px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              LinkedIn
+            </a>
+          )}
+          <Link href="/explore" className="bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-gray-400 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-center">Try Another</Link>
         </div>
       </div>
     </div>

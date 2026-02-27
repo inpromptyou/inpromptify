@@ -250,7 +250,9 @@ export default function TestSandboxPage({
           scoringResult: scores,
           cheatEvents,
         }),
-      }).catch(() => {}); // Fire and forget
+      }).then(r => r?.json()).then(d => {
+        if (d?.attemptId) sessionStorage.setItem(`attempt-id-${test.id}`, String(d.attemptId));
+      }).catch(() => {});
 
       setSandboxState("submitted");
       router.push(`/test/${test.id}/results`);
