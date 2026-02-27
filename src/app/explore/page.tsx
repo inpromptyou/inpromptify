@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 interface PublicTest {
   id: number;
@@ -30,6 +31,8 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 export default function ExplorePage() {
   const [tests, setTests] = useState<PublicTest[]>([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
+  const isLoggedIn = !!session?.user;
   const [filter, setFilter] = useState<string>("all");
   const [sort, setSort] = useState<string>("newest");
 
@@ -62,7 +65,11 @@ export default function ExplorePage() {
             </Link>
             <div className="flex items-center gap-3">
               <Link href="/test/demo" className="text-[13px] text-gray-400 hover:text-white transition-colors">Try Demo</Link>
-              <Link href="/login" className="text-[13px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Sign In</Link>
+              {isLoggedIn ? (
+                <Link href="/dashboard" className="text-[13px] font-medium text-white bg-indigo-600 hover:bg-indigo-500 px-4 py-1.5 rounded-md transition-colors">Dashboard</Link>
+              ) : (
+                <Link href="/login" className="text-[13px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Sign In</Link>
+              )}
             </div>
           </div>
           <h1 className="text-2xl font-bold text-white mb-1">Explore Assessments</h1>
