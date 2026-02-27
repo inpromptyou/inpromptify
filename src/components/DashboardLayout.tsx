@@ -34,6 +34,7 @@ const employerNav: NavItem[] = [
   { href: "/dashboard/candidates", label: "Candidates", icon: icons.candidates },
   { href: "/dashboard/analytics", label: "Analytics", icon: icons.analytics },
   { href: "/dashboard/jobs", label: "Jobs", icon: icons.jobs },
+  { href: "/dashboard/billing", label: "Billing", icon: icons.upgrade },
   { href: "/dashboard/settings", label: "Settings", icon: icons.settings },
 ];
 
@@ -127,7 +128,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <span className="text-[12px] font-semibold text-indigo-400">Free Plan</span>
           </div>
           <p className="text-[11px] text-gray-500 leading-relaxed mb-2.5">5 tests, 25 candidates/month</p>
-          <Link href="/pricing" className="block text-center bg-indigo-600 hover:bg-indigo-500 text-white text-[12px] font-medium py-1.5 rounded-md transition-colors">
+          <Link href="/dashboard/billing" className="block text-center bg-indigo-600 hover:bg-indigo-500 text-white text-[12px] font-medium py-1.5 rounded-md transition-colors">
             Upgrade to Pro
           </Link>
         </div>
@@ -178,7 +179,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {pageTitle && <h1 className="text-[15px] font-semibold text-white">{pageTitle}</h1>}
             </div>
             <div className="flex items-center gap-3">
-              <Link href="/pricing" className="hidden sm:inline-flex items-center gap-1.5 text-[12px] font-medium text-indigo-400 hover:text-indigo-300 bg-indigo-500/[0.08] hover:bg-indigo-500/[0.14] px-3 py-1.5 rounded-md transition-colors">
+              <Link href="/dashboard/billing" className="hidden sm:inline-flex items-center gap-1.5 text-[12px] font-medium text-indigo-400 hover:text-indigo-300 bg-indigo-500/[0.08] hover:bg-indigo-500/[0.14] px-3 py-1.5 rounded-md transition-colors">
                 {icons.upgrade}
                 Upgrade
               </Link>

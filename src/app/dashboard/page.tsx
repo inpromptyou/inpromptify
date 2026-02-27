@@ -210,7 +210,7 @@ export default function DashboardHome() {
             <h3 className="text-sm font-semibold text-white mb-1">Unlock more assessments</h3>
             <p className="text-[13px] text-gray-500">Free plan: 5 tests, 25 candidates/month. Pro gives you unlimited everything.</p>
           </div>
-          <Link href="/pricing" className="shrink-0 ml-6 bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-medium px-5 py-2.5 rounded-md transition-colors">
+          <Link href="/dashboard/billing" className="shrink-0 ml-6 bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-medium px-5 py-2.5 rounded-md transition-colors">
             View Plans
           </Link>
         </div>
