@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
 
 const menuGroups = [
   {
@@ -27,10 +28,12 @@ const menuGroups = [
 ];
 
 export default function Nav({ transparent = false }: { transparent?: boolean }) {
+  const { data: session } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const isLoggedIn = !!session?.user;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -139,24 +142,39 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
 
             <span className={`mx-2 h-4 w-px ${isDark ? "bg-white/10" : "bg-gray-200"}`} />
 
-            <Link
-              href="/login"
-              className={`text-[13px] px-3 py-1.5 rounded transition-colors ${
-                isDark ? "text-gray-500 hover:text-gray-200" : "text-gray-500 hover:text-gray-900"
-              }`}
-            >
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className={`text-[13px] font-medium px-4 py-1.5 rounded-md transition-all ${
-                isDark
-                  ? "text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.08] hover:border-white/[0.16]"
-                  : "text-gray-900 bg-gray-100 hover:bg-gray-200"
-              }`}
-            >
-              Get Started
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard"
+                className={`text-[13px] font-medium px-4 py-1.5 rounded-md transition-all ${
+                  isDark
+                    ? "text-white bg-indigo-600 hover:bg-indigo-500"
+                    : "text-white bg-indigo-600 hover:bg-indigo-500"
+                }`}
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className={`text-[13px] px-3 py-1.5 rounded transition-colors ${
+                    isDark ? "text-gray-500 hover:text-gray-200" : "text-gray-500 hover:text-gray-900"
+                  }`}
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/signup"
+                  className={`text-[13px] font-medium px-4 py-1.5 rounded-md transition-all ${
+                    isDark
+                      ? "text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.08] hover:border-white/[0.16]"
+                      : "text-gray-900 bg-gray-100 hover:bg-gray-200"
+                  }`}
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile toggle */}
@@ -206,16 +224,20 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
             </div>
           ))}
           <div className={`h-px my-2 ${isDark ? "bg-white/[0.04]" : "bg-gray-100"}`} />
-          <Link href="/login" onClick={() => setMobileOpen(false)} className={`block text-sm py-2 ${isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}>
-            Log in
-          </Link>
-          <Link
-            href="/signup"
-            onClick={() => setMobileOpen(false)}
-            className={`block text-sm py-2 font-medium ${isDark ? "text-indigo-400" : "text-indigo-600"}`}
-          >
-            Get Started
-          </Link>
+          {isLoggedIn ? (
+            <Link href="/dashboard" onClick={() => setMobileOpen(false)} className={`block text-sm py-2 font-medium ${isDark ? "text-indigo-400" : "text-indigo-600"}`}>
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" onClick={() => setMobileOpen(false)} className={`block text-sm py-2 ${isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}>
+                Log in
+              </Link>
+              <Link href="/signup" onClick={() => setMobileOpen(false)} className={`block text-sm py-2 font-medium ${isDark ? "text-indigo-400" : "text-indigo-600"}`}>
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
