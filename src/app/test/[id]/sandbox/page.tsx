@@ -50,8 +50,28 @@ export default function TestSandboxPage({
   const [error, setError] = useState<string | null>(null);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   const [showMobileTask, setShowMobileTask] = useState(false);
+  const [cheatEvents, setCheatEvents] = useState<Array<{type: string; timestamp: string}>>([]);
+  const [pasteWarning, setPasteWarning] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Anti-cheat: track paste, tab switches, right-click
+  useEffect(() => {
+    const logCheat = (type: string) => {
+      setCheatEvents(prev => [...prev, { type, timestamp: new Date().toISOString() }]);
+    };
+    const onPaste = () => { logCheat("paste"); setPasteWarning(true); setTimeout(() => setPasteWarning(false), 4000); };
+    const onVisChange = () => { if (document.hidden) logCheat("tab_switch"); };
+    const onContextMenu = (e: MouseEvent) => { e.preventDefault(); logCheat("right_click"); };
+    document.addEventListener("paste", onPaste);
+    document.addEventListener("visibilitychange", onVisChange);
+    document.addEventListener("contextmenu", onContextMenu);
+    return () => {
+      document.removeEventListener("paste", onPaste);
+      document.removeEventListener("visibilitychange", onVisChange);
+      document.removeEventListener("contextmenu", onContextMenu);
+    };
+  }, []);
 
   // Load test data
   useEffect(() => {
@@ -228,6 +248,7 @@ export default function TestSandboxPage({
           messages,
           inviteToken,
           scoringResult: scores,
+          cheatEvents,
         }),
       }).catch(() => {}); // Fire and forget
 
@@ -249,17 +270,17 @@ export default function TestSandboxPage({
   if (sandboxState === "loading" || !test) {
     if (error) {
       return (
-        <div className="h-screen flex items-center justify-center bg-gray-50">
+        <div className="h-screen flex items-center justify-center bg-[#0A0F1C]">
           <div className="text-center">
-            <p className="text-red-500 text-sm mb-4">{error}</p>
-            <Link href="/" className="text-sm text-[#6366F1]">← Back to Home</Link>
+            <p className="text-red-400 text-sm mb-4">{error}</p>
+            <Link href="/" className="text-sm text-indigo-400">Back to Home</Link>
           </div>
         </div>
       );
     }
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-sm text-gray-400">Loading test...</div>
+      <div className="h-screen flex items-center justify-center bg-[#0A0F1C]">
+        <div className="text-sm text-gray-500">Loading test...</div>
       </div>
     );
   }
@@ -272,37 +293,39 @@ export default function TestSandboxPage({
   const isDisabled = attempts >= test.max_attempts || timeLeft === 0 || sandboxState === "submitting" || sandboxState === "submitted";
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-[#0A0F1C]">
       {/* Top Bar */}
-      <div className="bg-white border-b border-gray-200 px-3 sm:px-4 py-2.5 flex items-center justify-between shrink-0">
+      <div className="bg-[#0C1120] border-b border-white/[0.06] px-3 sm:px-4 py-2.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <Link href="/" className="font-bold text-sm text-gray-900 shrink-0">InpromptiFy</Link>
-          <span className="text-xs text-gray-300 hidden sm:inline">|</span>
+          <Link href="/" className="font-mono text-sm text-white shrink-0">
+            <span className="text-indigo-500 opacity-60">[</span>IF<span className="text-indigo-500 opacity-60">]</span>
+          </Link>
+          <span className="text-xs text-white/10 hidden sm:inline">|</span>
           <div className="min-w-0 hidden sm:block">
-            <span className="text-sm font-medium text-gray-900 truncate">{test.title}</span>
-            <span className="text-xs text-gray-400 ml-2">{modelLabel}</span>
+            <span className="text-sm font-medium text-white truncate">{test.title}</span>
+            <span className="text-xs text-gray-600 ml-2">{modelLabel}</span>
           </div>
-          <button onClick={() => setShowMobileTask(!showMobileTask)} className="md:hidden text-xs text-[#6366F1] font-medium px-2 py-1 rounded border border-[#6366F1]/20 hover:bg-[#6366F1]/5">
+          <button onClick={() => setShowMobileTask(!showMobileTask)} className="md:hidden text-xs text-indigo-400 font-medium px-2 py-1 rounded border border-indigo-500/20 hover:bg-indigo-500/10">
             {showMobileTask ? "Chat" : "Task"}
           </button>
         </div>
         <div className="flex items-center gap-2 sm:gap-5">
           <div className="text-center hidden sm:block">
-            <div className="text-[10px] text-gray-400 uppercase tracking-wide">Attempts</div>
-            <div className={`text-sm font-mono font-bold ${attemptsWarning ? "text-red-500" : "text-gray-900"}`}>{attempts}/{test.max_attempts}</div>
+            <div className="text-[10px] text-gray-600 uppercase tracking-wide">Attempts</div>
+            <div className={`text-sm font-mono font-bold ${attemptsWarning ? "text-red-400" : "text-white"}`}>{attempts}/{test.max_attempts}</div>
           </div>
           <div className="text-center hidden sm:block">
-            <div className="text-[10px] text-gray-400 uppercase tracking-wide">Tokens</div>
-            <div className={`text-sm font-mono font-bold ${tokensWarning ? "text-red-500" : "text-gray-900"}`}>{tokensUsed.toLocaleString()}/{test.token_budget.toLocaleString()}</div>
+            <div className="text-[10px] text-gray-600 uppercase tracking-wide">Tokens</div>
+            <div className={`text-sm font-mono font-bold ${tokensWarning ? "text-red-400" : "text-white"}`}>{tokensUsed.toLocaleString()}/{test.token_budget.toLocaleString()}</div>
           </div>
           <div className="text-center">
-            <div className="text-[10px] text-gray-400 uppercase tracking-wide">Time</div>
-            <div className={`text-sm font-mono font-bold ${timeCritical ? "text-red-500 animate-pulse" : timeWarning ? "text-red-500" : "text-gray-900"}`}>{formatTime(timeLeft)}</div>
+            <div className="text-[10px] text-gray-600 uppercase tracking-wide">Time</div>
+            <div className={`text-sm font-mono font-bold ${timeCritical ? "text-red-400 animate-pulse" : timeWarning ? "text-red-400" : "text-white"}`}>{formatTime(timeLeft)}</div>
           </div>
           <button
             onClick={() => messages.length > 0 ? setShowSubmitConfirm(true) : undefined}
             disabled={messages.length === 0 || sandboxState === "submitting"}
-            className="bg-[#10B981] hover:bg-[#059669] disabled:bg-gray-200 disabled:text-gray-400 text-white px-3 sm:px-4 py-1.5 rounded-md text-sm font-medium transition-colors"
+            className="bg-emerald-600 hover:bg-emerald-500 disabled:bg-white/[0.04] disabled:text-gray-600 text-white px-3 sm:px-4 py-1.5 rounded-md text-sm font-medium transition-colors"
           >
             {sandboxState === "submitting" ? (
               <span className="flex items-center gap-1.5">
@@ -315,24 +338,24 @@ export default function TestSandboxPage({
       </div>
 
       {/* Mobile stats bar */}
-      <div className="sm:hidden bg-white border-b border-gray-100 px-3 py-1.5 flex items-center justify-between text-xs">
-        <span className={attemptsWarning ? "text-red-500 font-bold" : "text-gray-500"}>{attempts}/{test.max_attempts} attempts</span>
-        <span className={tokensWarning ? "text-red-500 font-bold" : "text-gray-500"}>{tokensUsed.toLocaleString()} tokens</span>
-        <span className="text-gray-400">{modelLabel}</span>
+      <div className="sm:hidden bg-[#0C1120] border-b border-white/[0.04] px-3 py-1.5 flex items-center justify-between text-xs">
+        <span className={attemptsWarning ? "text-red-400 font-bold" : "text-gray-500"}>{attempts}/{test.max_attempts} attempts</span>
+        <span className={tokensWarning ? "text-red-400 font-bold" : "text-gray-500"}>{tokensUsed.toLocaleString()} tokens</span>
+        <span className="text-gray-600">{modelLabel}</span>
       </div>
 
       {/* Submit Confirmation Modal */}
       {showSubmitConfirm && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-sm w-full p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Submit Final Answer?</h3>
-            <p className="text-sm text-gray-500 mb-1">This will end the test and score your responses.</p>
-            <p className="text-xs text-gray-400 mb-5">
-              {attempts} attempt{attempts !== 1 ? "s" : ""} used • {tokensUsed.toLocaleString()} tokens • {formatTime(test.time_limit_minutes * 60 - timeLeft)} elapsed
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0C1120] rounded-xl border border-white/[0.06] shadow-2xl shadow-black/40 max-w-sm w-full p-6">
+            <h3 className="text-lg font-semibold text-white mb-2">Submit Final Answer?</h3>
+            <p className="text-sm text-gray-400 mb-1">This will end the test and score your responses.</p>
+            <p className="text-xs text-gray-600 mb-5">
+              {attempts} attempt{attempts !== 1 ? "s" : ""} used -- {tokensUsed.toLocaleString()} tokens -- {formatTime(test.time_limit_minutes * 60 - timeLeft)} elapsed
             </p>
             <div className="flex gap-2">
-              <button onClick={() => setShowSubmitConfirm(false)} className="flex-1 border border-gray-200 hover:border-gray-300 text-gray-700 py-2 rounded-md text-sm font-medium transition-colors">Keep Working</button>
-              <button onClick={handleFinalSubmit} className="flex-1 bg-[#10B981] hover:bg-[#059669] text-white py-2 rounded-md text-sm font-medium transition-colors">Submit & Score</button>
+              <button onClick={() => setShowSubmitConfirm(false)} className="flex-1 border border-white/[0.08] hover:border-white/[0.14] text-gray-400 py-2 rounded-md text-sm font-medium transition-colors">Keep Working</button>
+              <button onClick={handleFinalSubmit} className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-md text-sm font-medium transition-colors">Submit & Score</button>
             </div>
           </div>
         </div>
@@ -341,18 +364,18 @@ export default function TestSandboxPage({
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left: Task Description */}
-        <div className={`${showMobileTask ? "block" : "hidden"} md:block w-full md:w-[360px] shrink-0 bg-white border-r border-gray-200 overflow-y-auto`}>
+        <div className={`${showMobileTask ? "block" : "hidden"} md:block w-full md:w-[360px] shrink-0 bg-[#0C1120] border-r border-white/[0.06] overflow-y-auto`}>
           <div className="p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Task Description</h2>
-            <p className="text-sm text-gray-600 leading-relaxed mb-5">{test.task_prompt}</p>
+            <h2 className="text-sm font-semibold text-white mb-3">Task Description</h2>
+            <p className="text-sm text-gray-400 leading-relaxed mb-5">{test.task_prompt}</p>
             {test.expected_outcomes && (
               <>
-                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Expected Outcome</h3>
+                <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Expected Outcome</h3>
                 <p className="text-sm text-gray-500 leading-relaxed mb-5">{test.expected_outcomes}</p>
               </>
             )}
-            <div className="mt-5 p-3 bg-[#6366F1]/5 rounded-md border border-[#6366F1]/10">
-              <p className="text-xs text-[#6366F1] leading-relaxed">
+            <div className="mt-5 p-3 bg-indigo-500/[0.06] rounded-md border border-indigo-500/[0.12]">
+              <p className="text-xs text-indigo-400/80 leading-relaxed">
                 <strong>Tip:</strong> Write clear, specific prompts. Include context about your target audience, desired format, and constraints. Quality over quantity — fewer well-crafted prompts score higher.
               </p>
             </div>
@@ -365,52 +388,57 @@ export default function TestSandboxPage({
             {messages.length === 0 && (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center max-w-xs">
-                  <div className="w-12 h-12 rounded-full bg-[#6366F1]/10 flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-[#6366F1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
                     </svg>
                   </div>
-                  <h3 className="text-sm font-medium text-gray-900 mb-1">Ready to begin</h3>
-                  <p className="text-xs text-gray-400">Type your first prompt to start interacting with {modelLabel}.</p>
+                  <h3 className="text-sm font-medium text-white mb-1">Ready to begin</h3>
+                  <p className="text-xs text-gray-600">Type your first prompt to start interacting with {modelLabel}.</p>
                 </div>
               </div>
             )}
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] sm:max-w-[80%] rounded-lg px-4 py-2.5 ${msg.role === "user" ? "bg-[#6366F1] text-white" : "bg-white border border-gray-200 text-gray-800"}`}>
-                  {msg.role === "assistant" && <span className="text-[10px] font-medium text-gray-400 block mb-1">{modelLabel}</span>}
+                <div className={`max-w-[85%] sm:max-w-[80%] rounded-lg px-4 py-2.5 ${msg.role === "user" ? "bg-indigo-600 text-white" : "bg-[#0C1120] border border-white/[0.06] text-gray-300"}`}>
+                  {msg.role === "assistant" && <span className="text-[10px] font-medium text-gray-600 block mb-1">{modelLabel}</span>}
                   <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
                 </div>
               </div>
             ))}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-white border border-gray-200 rounded-lg px-4 py-2.5">
-                  <span className="text-[10px] font-medium text-gray-400 block mb-1">{modelLabel}</span>
+                <div className="bg-[#0C1120] border border-white/[0.06] rounded-lg px-4 py-2.5">
+                  <span className="text-[10px] font-medium text-gray-600 block mb-1">{modelLabel}</span>
                   <div className="flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    <span className="w-1.5 h-1.5 bg-gray-600 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-1.5 h-1.5 bg-gray-600 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-1.5 h-1.5 bg-gray-600 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                   </div>
                 </div>
               </div>
             )}
             {error && (
               <div className="flex justify-center">
-                <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-2 text-sm">
+                <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg px-4 py-2 text-sm">
                   {error}
-                  <button onClick={() => setError(null)} className="ml-2 text-red-400 hover:text-red-600">✕</button>
+                  <button onClick={() => setError(null)} className="ml-2 text-red-500 hover:text-red-400">x</button>
                 </div>
               </div>
             )}
             <div ref={chatEndRef} />
           </div>
 
-          <div className="border-t border-gray-200 bg-white p-3">
+          {pasteWarning && (
+              <div className="px-4 py-1.5 bg-amber-500/10 border-t border-amber-500/20">
+                <p className="text-[11px] text-amber-400">Paste detected — your prompt originality is being tracked.</p>
+              </div>
+            )}
+          <div className="border-t border-white/[0.06] bg-[#0C1120] p-3">
             {isDisabled && sandboxState !== "submitting" ? (
               <div className="text-center py-2">
                 <p className="text-sm text-gray-500">
-                  {timeLeft === 0 ? "⏰ Time's up! Submitting your responses..." : attempts >= test.max_attempts ? "Maximum attempts reached. Submit your final answer above." : "Test completed."}
+                  {timeLeft === 0 ? "Time is up. Submitting your responses..." : attempts >= test.max_attempts ? "Maximum attempts reached. Submit your final answer above." : "Test completed."}
                 </p>
               </div>
             ) : (
@@ -423,9 +451,9 @@ export default function TestSandboxPage({
                   placeholder={sandboxState === "submitting" ? "Scoring in progress..." : "Type your prompt... (Enter to send, Shift+Enter for new line)"}
                   disabled={isDisabled || isTyping}
                   rows={1}
-                  className="flex-1 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent disabled:bg-gray-50 disabled:text-gray-300 resize-none"
+                  className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-md px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40 disabled:opacity-40 resize-none"
                 />
-                <button onClick={sendMessage} disabled={!input.trim() || isTyping || isDisabled} className="bg-[#6366F1] hover:bg-[#4F46E5] disabled:bg-gray-200 disabled:text-gray-400 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shrink-0">
+                <button onClick={sendMessage} disabled={!input.trim() || isTyping || isDisabled} className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-white/[0.04] disabled:text-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shrink-0">
                   {isTyping ? <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> : "Send"}
                 </button>
               </div>

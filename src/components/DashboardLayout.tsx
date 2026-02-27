@@ -30,6 +30,7 @@ const employerNav: NavItem[] = [
   { href: "/dashboard/create", label: "Create Test", icon: icons.create },
   { href: "/dashboard/tests", label: "My Tests", icon: icons.tests },
   { href: "/dashboard/candidates", label: "Candidates", icon: icons.candidates },
+  { href: "/dashboard/analytics", label: "Analytics", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> },
   { href: "/dashboard/jobs", label: "Jobs", icon: icons.jobs },
   { href: "/dashboard/api", label: "API", icon: icons.api },
   { href: "/dashboard/settings", label: "Settings", icon: icons.settings },

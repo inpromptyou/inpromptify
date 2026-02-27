@@ -257,9 +257,37 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
         )}
 
         {/* Action Buttons */}
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <button
+            onClick={async () => {
+              const guestInfo = sessionStorage.getItem(`guest-${id}`);
+              const guest = guestInfo ? JSON.parse(guestInfo) : {};
+              const res = await fetch("/api/test/report", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  ...result,
+                  testName,
+                  candidateName: guest.name || "Candidate",
+                  candidateEmail: guest.email || "",
+                }),
+              });
+              if (res.ok) {
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `InpromptiFy-Report.pdf`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }
+            }}
+            className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
+          >
+            Download PDF
+          </button>
           <div className="relative">
-            <button onClick={handleShare} className="w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5">Share</button>
+            <button onClick={handleShare} className="w-full bg-white border border-gray-200 hover:border-gray-300 text-gray-700 px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5">Share</button>
             {shareTooltip && <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10">Copied!</div>}
           </div>
           <Link href="/" className="bg-white border border-gray-200 hover:border-gray-300 text-gray-700 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-center">Try Another</Link>
