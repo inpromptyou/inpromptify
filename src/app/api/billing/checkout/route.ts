@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
 const PLANS: Record<string, { priceId: string; name: string }> = {
-  plus: { priceId: "price_plus_monthly", name: "Plus" },
-  pro: { priceId: "price_pro_monthly", name: "Pro" },
+  professional: { priceId: "price_professional_monthly", name: "Professional" },
+  team: { priceId: "price_team_monthly", name: "Team" },
   business: { priceId: "price_business_monthly", name: "Business" },
 };
 
