@@ -27,7 +27,7 @@ function ProgressRingSvg({ percent, size = 44, stroke = 3.5 }: { percent: number
   const color = ds.scoreRingColor(percent);
   return (
     <svg width={size} height={size} className="-rotate-90">
-      <circle cx={cx} cy={cy} r={radius} fill="none" stroke="#f3f4f6" strokeWidth={stroke} />
+      <circle cx={cx} cy={cy} r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={stroke} />
       <circle cx={cx} cy={cy} r={radius} fill="none" stroke={color} strokeWidth={stroke} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" className="transition-all duration-700 ease-out" />
     </svg>
   );
@@ -41,10 +41,14 @@ export default function DashboardHome() {
     totalTokensUsed: dashboardStats.totalTokensSaved,
   });
   const [recentResults, setRecentResults] = useState<Candidate[]>(mockCandidates.slice(0, 6));
+  const [setupDone, setSetupDone] = useState(false);
 
   useEffect(() => {
     fetch("/api/dashboard/stats").then((r) => r.json()).then((d) => {
-      if (d.testsCreated !== undefined) setStats(d);
+      if (d.testsCreated !== undefined) {
+        setStats(d);
+        if (d.testsCreated > 0) setSetupDone(true);
+      }
     }).catch(() => {});
     fetch("/api/dashboard/candidates").then((r) => r.json()).then((d) => {
       if (Array.isArray(d) && d.length > 0) setRecentResults(d.slice(0, 6));
@@ -54,16 +58,84 @@ export default function DashboardHome() {
   const statCards = [
     { label: "Tests Created", value: stats.testsCreated, trend: ds.fakeTrend(stats.testsCreated), delta: "+2", deltaUp: true },
     { label: "Candidates", value: stats.candidatesTested, trend: ds.fakeTrend(stats.candidatesTested), delta: "+8", deltaUp: true },
-    { label: "Avg Score", value: stats.avgPromptScore, isScore: true, delta: "↑ 3pts", deltaUp: true },
+    { label: "Avg Score", value: stats.avgPromptScore, isScore: true, delta: "+3pts", deltaUp: true },
     { label: "Tokens Used", value: stats.totalTokensUsed, format: (v: number) => `${(v / 1000).toFixed(1)}K`, trend: ds.fakeTrend(stats.totalTokensUsed / 1000), delta: "12% less", deltaUp: true },
   ];
 
   return (
     <div className={ds.page}>
-      {/* Header */}
-      <div className="mb-10">
-        <h1 className={ds.pageTitle}>Dashboard</h1>
-        <p className={ds.pageSubtitle}>Overview of your assessment activity</p>
+      {/* Getting Started - shown prominently */}
+      {!setupDone && (
+        <div className="mb-10 animate-fade-in-up">
+          <div className="bg-gradient-to-br from-indigo-600/10 to-violet-600/5 rounded-xl border border-indigo-500/20 p-8">
+            <h1 className="text-2xl font-bold text-white mb-2">Get started with InpromptiFy</h1>
+            <p className="text-sm text-gray-400 mb-8 max-w-lg">
+              Set up your first assessment in under a minute. Measure how efficiently your team uses AI
+              and identify where you are overspending.
+            </p>
+            <div className="grid md:grid-cols-3 gap-4">
+              {[
+                {
+                  step: "01",
+                  title: "Create an Assessment",
+                  desc: "Describe the skill you want to test. AI generates the task, scoring criteria, and token budgets automatically.",
+                  cta: "Create Test",
+                  href: "/dashboard/create",
+                  primary: true,
+                },
+                {
+                  step: "02",
+                  title: "Invite Your Team",
+                  desc: "Send assessment links to employees or candidates. They complete it in a sandboxed LLM environment.",
+                  cta: "Learn More",
+                  href: "/how-it-works",
+                  primary: false,
+                },
+                {
+                  step: "03",
+                  title: "Analyze Results",
+                  desc: "Get PromptScores with cost analytics. See who prompts efficiently and where money is being wasted.",
+                  cta: "View Demo",
+                  href: "/test/demo",
+                  primary: false,
+                },
+              ].map((item) => (
+                <div key={item.step} className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-5 flex flex-col">
+                  <span className="text-[11px] font-mono text-indigo-400/60 mb-3">{item.step}</span>
+                  <h3 className="text-sm font-semibold text-white mb-2">{item.title}</h3>
+                  <p className="text-[13px] text-gray-500 leading-relaxed mb-4 flex-1">{item.desc}</p>
+                  <Link
+                    href={item.href}
+                    className={`text-[13px] font-medium px-4 py-2 rounded-md text-center transition-all ${
+                      item.primary
+                        ? "bg-indigo-600 hover:bg-indigo-500 text-white hover:shadow-lg hover:shadow-indigo-500/20"
+                        : "bg-white/[0.04] hover:bg-white/[0.08] text-gray-400 border border-white/[0.06]"
+                    }`}
+                  >
+                    {item.cta}
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Key Insight Banner */}
+      <div className="mb-8 bg-[#0C1120] rounded-xl border border-white/[0.06] p-5 flex items-center justify-between">
+        <div>
+          <p className="text-[11px] font-mono text-indigo-400/60 uppercase tracking-wider mb-1">Efficiency Insight</p>
+          <p className="text-sm text-gray-400">
+            The average employee uses <span className="text-white font-semibold">3.2x more tokens</span> than necessary.
+            InpromptiFy helps you find and fix the waste.
+          </p>
+        </div>
+        <Link
+          href="/dashboard/create"
+          className="shrink-0 ml-6 text-[13px] font-medium px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white transition-all hover:shadow-lg hover:shadow-indigo-500/20"
+        >
+          Start Assessment
+        </Link>
       </div>
 
       {/* Stats */}
@@ -106,7 +178,7 @@ export default function DashboardHome() {
           Create Test
         </Link>
         <Link href="/dashboard/tests" className={ds.btnSecondary}>View All Tests</Link>
-        <Link href="/dashboard/candidates" className={ds.btnGhost}>Candidates →</Link>
+        <Link href="/dashboard/candidates" className={ds.btnGhost}>Candidates</Link>
       </div>
 
       {/* Recent Results */}
@@ -114,7 +186,7 @@ export default function DashboardHome() {
         <div className="flex items-center justify-between mb-4">
           <h2 className={ds.sectionTitle}>Recent Results</h2>
           <Link href="/dashboard/candidates" className="text-[12px] text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
-            View all →
+            View all
           </Link>
         </div>
         <div className={`${ds.card} overflow-hidden`}>
