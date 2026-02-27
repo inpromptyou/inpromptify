@@ -38,24 +38,24 @@ function AttemptTimeline({ messages }: { messages: StoredMessage[] }) {
       {pairs.map((pair) => {
         const isExpanded = expandedIdx === pair.index;
         return (
-          <div key={pair.index} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-            <button onClick={() => setExpandedIdx(isExpanded ? null : pair.index)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left">
+          <div key={pair.index} className="border border-white/[0.06] rounded-lg overflow-hidden bg-[#0C1120]">
+            <button onClick={() => setExpandedIdx(isExpanded ? null : pair.index)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors text-left">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-7 h-7 rounded-full bg-[#6366F1] text-white flex items-center justify-center text-xs font-bold shrink-0">{pair.index + 1}</div>
-                <p className="text-sm text-gray-900 font-medium truncate max-w-[300px] sm:max-w-[500px]">{pair.prompt.content.slice(0, 80)}{pair.prompt.content.length > 80 ? "…" : ""}</p>
+                <p className="text-sm text-white font-medium truncate max-w-[300px] sm:max-w-[500px]">{pair.prompt.content.slice(0, 80)}{pair.prompt.content.length > 80 ? "…" : ""}</p>
               </div>
-              <svg className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              <svg className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
             </button>
             {isExpanded && (
-              <div className="border-t border-gray-100 px-4 py-3 space-y-3">
+              <div className="border-t border-white/[0.06] px-4 py-3 space-y-3">
                 <div>
-                  <span className="text-[10px] font-semibold text-[#6366F1] uppercase tracking-wide">Your Prompt</span>
-                  <p className="text-sm text-gray-700 mt-1 whitespace-pre-wrap leading-relaxed">{pair.prompt.content}</p>
+                  <span className="text-[10px] font-semibold text-indigo-400 uppercase tracking-wide">Your Prompt</span>
+                  <p className="text-sm text-gray-300 mt-1 whitespace-pre-wrap leading-relaxed">{pair.prompt.content}</p>
                 </div>
                 {pair.response && (
                   <div>
-                    <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wide">AI Response</span>
-                    <div className="text-sm text-gray-600 mt-1 whitespace-pre-wrap leading-relaxed bg-gray-50 rounded-md p-3 max-h-[300px] overflow-y-auto">{pair.response.content}</div>
+                    <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wide">AI Response</span>
+                    <div className="text-sm text-gray-400 mt-1 whitespace-pre-wrap leading-relaxed bg-white/[0.02] rounded-md p-3 max-h-[300px] overflow-y-auto border border-white/[0.04]">{pair.response.content}</div>
                   </div>
                 )}
               </div>
@@ -87,8 +87,8 @@ function ScoreDistributionChart({ userScore }: { userScore: number }) {
         return (
           <div key={b.range} className="flex items-center gap-3">
             <span className="text-[10px] text-gray-400 w-10 text-right font-mono">{b.range}</span>
-            <div className="flex-1 h-5 bg-gray-100 rounded-sm overflow-hidden relative">
-              <div className={`h-full rounded-sm transition-all duration-1000 ease-out ${isUser ? "bg-[#6366F1]" : "bg-gray-300"}`} style={{ width: `${pct}%` }} />
+            <div className="flex-1 h-5 bg-white/[0.04] rounded-sm overflow-hidden relative">
+              <div className={`h-full rounded-sm transition-all duration-1000 ease-out ${isUser ? "bg-[#6366F1]" : "bg-white/[0.12]"}`} style={{ width: `${pct}%` }} />
               {isUser && <span className="absolute right-2 top-0.5 text-[9px] font-bold text-white">YOU</span>}
             </div>
             <span className="text-[10px] text-gray-400 w-6 font-mono">{b.count}</span>
@@ -205,9 +205,9 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
           <h1 className="text-lg font-bold mb-1">{testName}</h1>
           {result.testDescription && <p className="text-sm text-gray-300 leading-relaxed mb-3">{result.testDescription}</p>}
           <div className="flex flex-wrap gap-4 text-xs text-gray-400">
-            <span>⏱ {formatTime(timeTaken)} / {result.stats.timeLimitMinutes}:00</span>
-            <span>📝 {result.stats.attemptsUsed} of {result.stats.maxAttempts} attempts</span>
-            <span>🪙 {result.stats.tokensUsed.toLocaleString()} / {result.stats.tokenBudget.toLocaleString()} tokens</span>
+            <span>{formatTime(timeTaken)} / {result.stats.timeLimitMinutes}:00</span>
+            <span>{result.stats.attemptsUsed} of {result.stats.maxAttempts} attempts</span>
+            <span>{result.stats.tokensUsed.toLocaleString()} / {result.stats.tokenBudget.toLocaleString()} tokens</span>
           </div>
         </div>
       </div>

@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
         ${tokensUsed || 0},
         ${attemptsUsed || 0},
         ${timeSpentMinutes || 0},
-        NOW() - INTERVAL '${timeSpentMinutes || 1} minutes',
+        NOW() - make_interval(mins => ${Number(timeSpentMinutes) || 1}),
         NOW()
       ) RETURNING id
     `;
