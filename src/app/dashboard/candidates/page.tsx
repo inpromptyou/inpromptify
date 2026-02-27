@@ -40,7 +40,7 @@ export default function CandidatesPage() {
 
   const SortHeader = ({ label, sortKeyName, className = "" }: { label: string; sortKeyName: SortKey; className?: string }) => (
     <th
-      className={`${ds.tableCell} ${ds.tableHeader} text-left cursor-pointer select-none hover:text-gray-600 transition-colors ${className}`}
+      className={`${ds.tableCell} ${ds.tableHeader} text-left cursor-pointer select-none hover:text-gray-400 transition-colors ${className}`}
       onClick={() => handleSort(sortKeyName)}
     >
       <span className="inline-flex items-center gap-1">
@@ -80,7 +80,7 @@ export default function CandidatesPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100">
+              <tr className="border-b border-white/[0.04]">
                 <th className={`${ds.tableCell} ${ds.tableHeader} text-left`}>Candidate</th>
                 <SortHeader label="Test" sortKeyName="testName" />
                 <SortHeader label="Score" sortKeyName="promptScore" />
@@ -93,14 +93,14 @@ export default function CandidatesPage() {
             </thead>
             <tbody>
               {sorted.map((c, i) => (
-                <tr key={c.id} className={`${ds.tableRow} ${i < sorted.length - 1 ? "border-b border-gray-50" : ""}`}>
+                <tr key={c.id} className={`${ds.tableRow} ${i < sorted.length - 1 ? "border-b border-white/[0.03]" : ""}`}>
                   <td className={ds.tableCell}>
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-medium text-gray-400">
+                      <div className="w-7 h-7 rounded-full bg-white/[0.04] flex items-center justify-center text-[10px] font-medium text-gray-400">
                         {c.name.split(" ").map((n: string) => n[0]).join("")}
                       </div>
                       <div>
-                        <div className="text-[13px] font-medium text-gray-900">{c.name}</div>
+                        <div className="text-[13px] font-medium text-white">{c.name}</div>
                         <div className="text-[11px] text-gray-400">{c.email}</div>
                       </div>
                     </div>
@@ -109,7 +109,7 @@ export default function CandidatesPage() {
                   <td className={ds.tableCell}>
                     <div className="flex items-center gap-2">
                       <span className={`text-[13px] font-semibold ${ds.scoreBadge(c.promptScore)}`}>{c.promptScore}</span>
-                      <div className="w-10 h-1 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="w-10 h-1 bg-white/[0.04] rounded-full overflow-hidden">
                         <div className="h-full rounded-full transition-all duration-500" style={{ width: `${c.promptScore}%`, backgroundColor: ds.scoreRingColor(c.promptScore) }} />
                       </div>
                     </div>
@@ -119,7 +119,7 @@ export default function CandidatesPage() {
                   <td className={ds.tableCellMuted}>{c.attemptsUsed}</td>
                   <td className={ds.tableCellMuted}>{c.completedAt}</td>
                   <td className={ds.tableCell}>
-                    <span className={`text-[12px] ${c.percentile >= 75 ? "text-emerald-600" : c.percentile >= 50 ? "text-gray-600" : "text-gray-400"}`}>
+                    <span className={`text-[12px] ${c.percentile >= 75 ? "text-emerald-400" : c.percentile >= 50 ? "text-gray-400" : "text-gray-400"}`}>
                       Top {100 - c.percentile}%
                     </span>
                   </td>

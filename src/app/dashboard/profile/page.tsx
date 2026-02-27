@@ -80,55 +80,55 @@ export default function ProfilePage() {
   return (
     <div className="p-6 lg:p-8 max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-xl font-bold text-gray-900">My Profile</h1>
+        <h1 className="text-xl font-bold text-white">My Profile</h1>
         <p className="text-gray-500 text-sm mt-1">Complete your profile to stand out to employers</p>
       </div>
 
       {/* Completeness Bar */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+      <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-4 mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-900">Profile Completeness</span>
-          <span className={`text-sm font-bold ${completeness >= 80 ? "text-emerald-600" : completeness >= 50 ? "text-amber-600" : "text-red-500"}`}>{completeness}%</span>
+          <span className="text-sm font-medium text-white">Profile Completeness</span>
+          <span className={`text-sm font-bold ${completeness >= 80 ? "text-emerald-400" : completeness >= 50 ? "text-amber-600" : "text-red-500"}`}>{completeness}%</span>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-          <div className={`h-full rounded-full transition-all ${completeness >= 80 ? "bg-emerald-500" : completeness >= 50 ? "bg-amber-500" : "bg-red-500"}`} style={{ width: `${completeness}%` }} />
+        <div className="w-full bg-white/[0.04] rounded-full h-2.5 overflow-hidden">
+          <div className={`h-full rounded-full transition-all ${completeness >= 80 ? "bg-emerald-500" : completeness >= 50 ? "bg-amber-500" : "bg-red-500/100"}`} style={{ width: `${completeness}%` }} />
         </div>
       </div>
 
       {success && (
-        <div className="text-sm text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-md px-4 py-3 mb-6">Profile saved successfully!</div>
+        <div className="text-sm text-emerald-400 bg-emerald-50 border border-emerald-100 rounded-md px-4 py-3 mb-6">Profile saved successfully!</div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
+      <div className="bg-[#0C1120] rounded-lg border border-white/[0.06] p-6 space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Full Name</label>
-            <input type="text" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" />
+            <input type="text" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="w-full border border-white/[0.06] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Avatar URL</label>
-            <input type="url" value={form.avatarUrl} onChange={e => setForm(p => ({ ...p, avatarUrl: e.target.value }))} className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" placeholder="https://..." />
+            <input type="url" value={form.avatarUrl} onChange={e => setForm(p => ({ ...p, avatarUrl: e.target.value }))} className="w-full border border-white/[0.06] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" placeholder="https://..." />
           </div>
         </div>
 
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Bio / Description</label>
-          <textarea value={form.bio} onChange={e => setForm(p => ({ ...p, bio: e.target.value }))} rows={3} className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none" placeholder="Tell employers about yourself..." />
+          <textarea value={form.bio} onChange={e => setForm(p => ({ ...p, bio: e.target.value }))} rows={3} className="w-full border border-white/[0.06] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none" placeholder="Tell employers about yourself..." />
         </div>
 
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Work History</label>
-          <textarea value={form.workHistory} onChange={e => setForm(p => ({ ...p, workHistory: e.target.value }))} rows={4} className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none" placeholder="Past roles and experience..." />
+          <textarea value={form.workHistory} onChange={e => setForm(p => ({ ...p, workHistory: e.target.value }))} rows={4} className="w-full border border-white/[0.06] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none" placeholder="Past roles and experience..." />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">LinkedIn URL</label>
-            <input type="url" value={form.linkedinUrl} onChange={e => setForm(p => ({ ...p, linkedinUrl: e.target.value }))} className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" placeholder="https://linkedin.com/in/..." />
+            <input type="url" value={form.linkedinUrl} onChange={e => setForm(p => ({ ...p, linkedinUrl: e.target.value }))} className="w-full border border-white/[0.06] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" placeholder="https://linkedin.com/in/..." />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Skills (comma-separated)</label>
-            <input type="text" value={form.skillsTags} onChange={e => setForm(p => ({ ...p, skillsTags: e.target.value }))} className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" placeholder="AI prompting, content strategy, data analysis" />
+            <input type="text" value={form.skillsTags} onChange={e => setForm(p => ({ ...p, skillsTags: e.target.value }))} className="w-full border border-white/[0.06] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" placeholder="AI prompting, content strategy, data analysis" />
           </div>
         </div>
 

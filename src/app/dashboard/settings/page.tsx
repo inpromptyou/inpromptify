@@ -66,7 +66,7 @@ export default function SettingsPage() {
           ].map((item) => (
             <div key={item.label} className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] text-gray-900">{item.label}</div>
+                <div className="text-[13px] text-white">{item.label}</div>
                 <div className="text-[11px] text-gray-400 mt-0.5">{item.desc}</div>
               </div>
               <Toggle checked={item.checked} onChange={item.onChange} />
@@ -79,34 +79,34 @@ export default function SettingsPage() {
       <section className={ds.flatSection}>
         <h2 className={`${ds.sectionLabel} mb-1`}>API Keys</h2>
         <p className="text-[12px] text-gray-400 mb-4">Programmatic access to your account</p>
-        <div className="flex items-center justify-between py-3 border-b border-gray-50">
+        <div className="flex items-center justify-between py-3 border-b border-white/[0.03]">
           <div>
-            <div className="text-[13px] font-mono text-gray-900">sk-inp-****************************a3f7</div>
+            <div className="text-[13px] font-mono text-white">sk-inp-****************************a3f7</div>
             <div className="text-[11px] text-gray-400 mt-0.5">Created Jan 15, 2026</div>
           </div>
           <button className="text-[12px] text-red-500 hover:text-red-600 font-medium transition-colors">Revoke</button>
         </div>
-        <button className="text-[12px] text-indigo-600 hover:text-indigo-700 font-medium mt-3 transition-colors">Generate new key</button>
+        <button className="text-[12px] text-indigo-400 hover:text-indigo-400 font-medium mt-3 transition-colors">Generate new key</button>
       </section>
 
       {/* Billing */}
       <section className="pb-6">
         <h2 className={`${ds.sectionLabel} mb-1`}>Billing</h2>
         <p className="text-[12px] text-gray-400 mb-4">Manage your subscription</p>
-        <div className="flex items-center justify-between py-3 border-b border-gray-50">
+        <div className="flex items-center justify-between py-3 border-b border-white/[0.03]">
           <div>
-            <div className="text-[13px] font-medium text-gray-900">Business Plan</div>
+            <div className="text-[13px] font-medium text-white">Business Plan</div>
             <div className="text-[11px] text-gray-400 mt-0.5">$249/month · Next billing: Mar 1, 2026</div>
           </div>
-          <span className="flex items-center gap-1.5 text-[11px] text-emerald-600 font-medium">
+          <span className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium">
             <span className={ds.statusDot.active} />
             Active
           </span>
         </div>
         <div className="flex gap-3 mt-3 text-[12px]">
-          <button className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors">Manage subscription</button>
+          <button className="text-indigo-400 hover:text-indigo-400 font-medium transition-colors">Manage subscription</button>
           <span className="text-gray-200">|</span>
-          <button className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors">View invoices</button>
+          <button className="text-indigo-400 hover:text-indigo-400 font-medium transition-colors">View invoices</button>
         </div>
       </section>
     </div>

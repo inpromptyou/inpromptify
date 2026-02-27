@@ -118,7 +118,7 @@ export default function MyTestsPage() {
   const visibilityBadge = (t: DbTest) => {
     const isPublic = t.visibility === "public";
     return (
-      <span className={`text-[11px] ${isPublic ? "text-emerald-600" : "text-gray-400"}`}>
+      <span className={`text-[11px] ${isPublic ? "text-emerald-400" : "text-gray-400"}`}>
         {isPublic ? "🌐 Public" : "🔒 Private"}
       </span>
     );
@@ -140,11 +140,11 @@ export default function MyTestsPage() {
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-1 mb-6 border-b border-gray-100">
+      <div className="flex gap-1 mb-6 border-b border-white/[0.04]">
         {(["all", "active", "draft", "archived"] as FilterTab[]).map((t) => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-3 py-2 text-[13px] font-medium border-b-2 transition-all duration-200 ${
-              tab === t ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-400 hover:text-gray-600"
+              tab === t ? "border-indigo-500 text-indigo-400" : "border-transparent text-gray-400 hover:text-gray-400"
             }`}>
             {t.charAt(0).toUpperCase() + t.slice(1)}
             <span className="ml-1.5 text-[11px] text-gray-300">{counts[t]}</span>
@@ -157,12 +157,12 @@ export default function MyTestsPage() {
       )}
 
       {error && (
-        <div className="text-[13px] text-red-600 bg-red-50 border border-red-100 rounded-md px-4 py-3 mb-6">{error}</div>
+        <div className="text-[13px] text-red-600 bg-red-500/10 border border-red-500/20 rounded-md px-4 py-3 mb-6">{error}</div>
       )}
 
       {!loading && !error && tests.length === 0 && (
         <div className="text-center py-20">
-          <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+          <div className="w-12 h-12 rounded-full bg-white/[0.04] flex items-center justify-center mx-auto mb-4">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gray-400">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
             </svg>
@@ -183,7 +183,7 @@ export default function MyTestsPage() {
         <div className={`${ds.card} overflow-hidden`}>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100">
+              <tr className="border-b border-white/[0.04]">
                 <th className={`${ds.tableCell} ${ds.tableHeader} text-left`}>Test</th>
                 <th className={`${ds.tableCell} ${ds.tableHeader} text-left hidden sm:table-cell`}>Type</th>
                 <th className={`${ds.tableCell} ${ds.tableHeader} text-left hidden md:table-cell`}>Visibility</th>
@@ -195,7 +195,7 @@ export default function MyTestsPage() {
             </thead>
             <tbody>
               {filtered.map((test, i) => (
-                <tr key={test.id} className={`${ds.tableRow} group ${i < filtered.length - 1 ? "border-b border-gray-50" : ""}`}>
+                <tr key={test.id} className={`${ds.tableRow} group ${i < filtered.length - 1 ? "border-b border-white/[0.03]" : ""}`}>
                   <td className={ds.tableCell}>
                     <div className="flex items-center gap-3">
                       {test.cover_image ? (
@@ -218,7 +218,7 @@ export default function MyTestsPage() {
                           <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                             test.status === "active" ? "bg-emerald-500" : test.status === "draft" ? "bg-gray-300" : "bg-gray-200"
                           }`} />
-                          <Link href={`/dashboard/tests/${test.id}`} className="text-[13px] font-medium text-gray-900 hover:text-indigo-600 transition-colors truncate">
+                          <Link href={`/dashboard/tests/${test.id}`} className="text-[13px] font-medium text-white hover:text-indigo-400 transition-colors truncate">
                             {test.title}
                           </Link>
                         </div>
@@ -228,7 +228,7 @@ export default function MyTestsPage() {
                   </td>
                   <td className={`${ds.tableCell} hidden sm:table-cell`}>{listingBadge(test)}</td>
                   <td className={`${ds.tableCell} hidden md:table-cell`}>{visibilityBadge(test)}</td>
-                  <td className={`${ds.tableCell} text-gray-600 hidden sm:table-cell`}>{test.candidates_count}</td>
+                  <td className={`${ds.tableCell} text-gray-400 hidden sm:table-cell`}>{test.candidates_count}</td>
                   <td className={`${ds.tableCell} hidden md:table-cell`}>
                     <span className={`text-[13px] font-medium ${ds.scoreBadge(Number(test.avg_score))}`}>
                       {Number(test.avg_score) || "—"}
@@ -240,12 +240,12 @@ export default function MyTestsPage() {
                   <td className={`${ds.tableCell} text-right`}>
                     <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
                       <Link href={`/dashboard/tests/${test.id}`}
-                        className="px-2 py-1 text-[11px] font-medium text-gray-500 hover:text-indigo-600 rounded hover:bg-indigo-50 transition-colors"
+                        className="px-2 py-1 text-[11px] font-medium text-gray-500 hover:text-indigo-400 rounded hover:bg-indigo-500/10 transition-colors"
                         title="Edit">
                         Edit
                       </Link>
                       <button onClick={() => toggleStatus(test)}
-                        className="px-2 py-1 text-[11px] font-medium text-gray-500 hover:text-emerald-600 rounded hover:bg-emerald-50 transition-colors"
+                        className="px-2 py-1 text-[11px] font-medium text-gray-500 hover:text-emerald-400 rounded hover:bg-emerald-50 transition-colors"
                         title={test.status === "active" ? "Unpublish" : "Publish"}>
                         {test.status === "active" ? "Unpublish" : "Publish"}
                       </button>
@@ -264,7 +264,7 @@ export default function MyTestsPage() {
                         </button>
                       )}
                       <button onClick={() => deleteTest(test)}
-                        className="px-2 py-1 text-[11px] font-medium text-gray-500 hover:text-red-600 rounded hover:bg-red-50 transition-colors"
+                        className="px-2 py-1 text-[11px] font-medium text-gray-500 hover:text-red-600 rounded hover:bg-red-500/10 transition-colors"
                         title="Delete">
                         Delete
                       </button>
